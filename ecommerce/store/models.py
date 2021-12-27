@@ -8,6 +8,8 @@ class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=200, null=True)
     email = models.EmailField(max_length=200, null=True)
+    address = models.CharField(max_length=200, null=True) #added
+    contact = models.BigIntegerField(null=True) #added
 
     def __str__(self):
         return self.name
@@ -18,6 +20,8 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=7, decimal_places=2)
     digital = models.BooleanField(default=False, null=True, blank=False)
     image = models.ImageField(null=True, blank=True)
+    status = models.BooleanField(default=False, null=True, blank=False) #changed
+    description = models.TextField(max_length=1000, null=True) #added
 
     def __str__(self):
         return self.name
@@ -36,6 +40,9 @@ class Order(models.Model):
     date_orderd = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False, null=False, blank=False)
     transaction_id = models.CharField(max_length=200, null=True)
+    status = models.BooleanField(default=False, null=True, blank=False) #added
+    total_price = models.FloatField(max_length=200, null=True) #added
+
 
     def __str__(self):
         return str(self.id)
