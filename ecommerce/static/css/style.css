@@ -1,0 +1,54 @@
+img {
+  max-width: 100%;
+}
+
+.banner {
+  height: 300px;
+  padding: 60px 0;
+}
+
+.banner h1 {
+  color: #fff;
+  font-size: 40px;
+}
+
+@media (min-width: 768px) {
+  .banner h1 {
+    font-size: 50px;
+  }
+}
+
+.product-details {
+  padding: 60px 0;
+}
+
+.product-details .container {
+  background-color: #fff;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  -webkit-box-shadow: 0 1px 1px 1px #eee;
+          box-shadow: 0 1px 1px 1px #eee;
+}
+
+.product-details-image img {
+  height: 400px;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.product-details-description .add-cart span {
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-right: 32px;
+}
+
+.product-details-description .add-cart input {
+  height: 30px;
+  width: 50px;
+  text-align: center;
+}
+
+.product-details-description .add-cart button {
+  margin-left: 8px;
+}
+/*# sourceMappingURL=style.css.map */
