@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 import json
 import datetime
 
@@ -16,6 +16,19 @@ def store(request):
     products = Product.objects.all()
     context = {'products':products, 'cartItems': cartItems}
     return render(request, 'store/store.html', context)
+
+def details(request, product_id):
+
+    try:
+        productId = Product.objects.get(pk=product_id)
+    except:
+        raise Http404("Product doese not exist")
+
+    data = cartData(request)
+    cartItems = data['cartItems']
+
+    context = {'cartItems': cartItems, 'product':productId}
+    return render(request, 'store/details.html', context)
 
 
 def cart(request):
@@ -39,7 +52,7 @@ def checkout(request):
     context = {'items':items, 'order':order, 'cartItems': cartItems}
     return render(request, 'store/checkout.html', context)
    
-
+   
 def updateItem(request):
     data = json.loads(request.body)
     productId = data['productId']
