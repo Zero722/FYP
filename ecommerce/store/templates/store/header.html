@@ -87,6 +87,11 @@
             }
             console.log("Cart:", cart);
         </script>
+        <script src="https://unpkg.com/@trevoreyre/autocomplete-js"></script>
+        <link
+        rel="stylesheet"
+        href="https://unpkg.com/@trevoreyre/autocomplete-js/dist/style.css"
+        />
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -130,12 +135,15 @@
                         </div>
                     </li>
                     <li>
-                        <input
-                            class="form-control sm-2"
-                            type="search"
-                            placeholder="Search..."
-                            aria-label="Search"
-                        />
+                        <div id="autocomplete" class="autocomplete">
+                            <input
+                                class="autocomplete-input form-control sm-2"
+                                type="search"
+                                placeholder="Search..."
+                                aria-label="Search"
+                                />
+                            <ul class="autocomplete-result-list"></ul>
+                        </div>
                     </li>
                     <li>
                         <button
@@ -171,6 +179,40 @@
 			{% endblock content %}
         <!-- </div> -->
 
+        <!--Added-->
+        <script>
+            new Autocomplete('#autocomplete', {
+                search : input =>{
+                    console.log(input)
+                    const url = `get-products/?search=${input}`
+                    return new Promise(resolve => {
+                        fetch(url)
+                        .then(response=>response.json())
+                        .then(data => {
+                            console.log(data.payload)
+                            resolve(data.payload)
+                        })
+                    })
+                },
+                renderResult : (result, props) => {
+                    console.log(props)
+                    let group = ''
+                    if (result.index % 3 == 0){
+                        group = `<li class='group'>Groups</li>`
+                    }
+                    return `
+                    ${group}
+                    <li ${props}>
+                        <div class='wiki-title'>
+                            ${result.name}
+                            </div>
+                            </li>
+                    `
+                },
+                getResultValue: result => result.name
+            })
+        </script>
+        
         <script
             src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
             integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"

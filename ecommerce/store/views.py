@@ -29,7 +29,22 @@ def details(request, product_id):
 
     context = {'cartItems': cartItems, 'product':productId}
     return render(request, 'store/details.html', context)
+    
+#Search
+def get_products(request):
+    search = request.GET.get('search')
+    payload = []
+    if search:
+            objs = Product.objects.filter(name__icontains = search)
+            for obj in objs:
+                payload.append({
+                    'name' : obj.name
+                })
 
+    return JsonResponse({
+        'status' : True,
+        "payload" : payload
+    })
 
 def cart(request):
 
