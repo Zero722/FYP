@@ -28,6 +28,12 @@
             href="{% static 'css/main.css' %}"
         />
 
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="{% static 'css/style.css' %}"
+        />
+
         <script type="text/javascript">
             var user = "{{request.user}}";
 
@@ -159,11 +165,11 @@
             </div>
         </nav>
 
-        <div class="container">
-            <br />
+        <!-- <div class="container">
+            <br /> -->
             {% block content %} 
 			{% endblock content %}
-        </div>
+        <!-- </div> -->
 
         <script
             src="https://code.jquery.com/jquery-3.4.1.slim.min.js"

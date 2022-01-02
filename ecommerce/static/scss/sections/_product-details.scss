@@ -1,0 +1,35 @@
+.product-details {
+    padding: 60px 0;
+
+    .container {
+        background-color: #fff;
+        padding-top: 30px;
+        padding-bottom: 30px;
+        box-shadow: 0 1px 1px 1px #eee;
+    }
+
+    &-image {
+        img {
+            height: 400px;
+            object-fit: cover;
+        }        
+    }
+
+    &-description {
+        .add-cart {
+            span {
+                text-transform: uppercase;
+                font-weight: 700;
+                margin-right: 32px;
+            }
+            input {
+                height: 30px;
+                width: 50px;
+                text-align: center;
+            }
+            button {
+                margin-left: 8px;
+            }
+        }
+    }
+}
