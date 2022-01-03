@@ -2,6 +2,23 @@ img {
   max-width: 100%;
 }
 
+header {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+}
+
+header .navbar {
+  background-color: #000;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+header .navbar .logo img {
+  height: 70px;
+}
+
 .banner {
   height: 300px;
   padding: 60px 0;
