@@ -21,7 +21,7 @@ class Product(models.Model):
     digital = models.BooleanField(default=False, null=True, blank=False)
     image = models.ImageField(null=True, blank=True)
     status = models.BooleanField(default=False, null=True, blank=False) #changed
-    description = models.TextField(max_length=1000, null=True) #added
+    description = models.TextField(max_length=1000, null=True, blank=True) #added
 
     def __str__(self):
         return self.name
@@ -81,6 +81,10 @@ class OrderItem(models.Model):
     def get_total(self):
         total = self.product.price * self.quantity
         return total
+
+    def __str__(self):
+        info = str(self.order)+": "+str(self.product)+"->"+str(self.quantity)
+        return str(info)
     
 
 class ShippingAddress(models.Model):

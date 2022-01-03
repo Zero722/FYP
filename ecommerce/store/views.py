@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse, Http404
+from django.db.models import Q 
 import json
 import datetime
 
@@ -29,7 +30,36 @@ def details(request, product_id):
 
     context = {'cartItems': cartItems, 'product':productId}
     return render(request, 'store/details.html', context)
+    
+#Search
+def get_products(request):
+    search = request.GET.get('search')
+    payload = []
+    if search:
+            # objs = Product.objects.filter(Q(name__icontains = search)|Q(name__startswith = search))
+            # objs = Product.objects.filter(name__icontains = search)
+            objs = Product.objects.filter(name__startswith = search)
+            ob = Product.objects.filter(name__icontains = search)
+        
+            for obj in objs:
+                payload.append({
+                    'id' : obj.pk,
+                    'imgurl' : obj.imageURL,
+                    'name' : obj.name
+                })
 
+            for obj in ob:
+                if obj not in objs:
+                    payload.append({
+                        'id' : obj.pk,
+                        'imgurl' : obj.imageURL,
+                        'name' : obj.name
+                    })
+
+    return JsonResponse({
+        'status' : True,
+        "payload" : payload
+    })
 
 def cart(request):
 

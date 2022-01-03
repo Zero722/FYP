@@ -1,19 +1,17 @@
 {% extends 'store/header.html' %}
 {% load static %}
 {% block content %}
-    <!-- Product id: {{product.id}}<br>
-    Product name: {{product}} -->
 
     <!-- Banner -->
-    <section class="banner" style="background-image: url('{% static 'images/banner.png' %}');">
+    <!--<section class="banner" style="background-image: url('{% static 'images/banner.png' %}');">
         <div class="container text-center h-100">
             <div class="row align-items-center h-100">
                 <div class="col-12">
-                    <h1>Product Title</h1>
+                    <h1>{{product}}</h1>
                 </div>
             </div>
         </div>
-    </section>
+    </section>-->
     <!-- Banner end -->
 
     <!-- Product details -->
@@ -22,19 +20,19 @@
             <div class="row align-items-center">
                 <div class="col-lg-6 pr-xl-4 mb-4 mb-lg-0">
                     <div class="product-details-image">
-                        <img src="{% static 'images/headphones.jpg' %}" alt="">
+                        <img src="{{product.imageURL}}" alt="">
                     </div>
                 </div>
                 <div class="col-lg-6 pl-xl-4">
                     <div class="product-details-description">
-                        <h2 class="mb-4">Product Title</h2>
-                        <h3 class="mb-4">Rs 2000</h3>
+                        <h2 class="mb-4">{{product}}</h2>
+                        <h3 class="mb-4">${{product.price}}</h3>
                         <div class="add-cart d-flex align-items-center mb-4">
-                            <span>Quantity:</span>
-                            <input type="number" value="1" min="1">
+                            {% comment %} <span>Quantity:</span> {% endcomment %}
+                            {% comment %} <input type="number" value="1" min="1"> {% endcomment %}
                             <button class="btn btn-primary">Add to cart</button>
                         </div>
-                        <p>Product description: Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure aperiam recusandae quos ullam dicta numquam quisquam est porro unde dolor.</p>
+                        <p>{{product.description}}</p>
                     </div>
                 </div>
             </div>
