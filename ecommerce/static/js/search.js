@@ -1,37 +1,36 @@
-const search = document.getElementById('search');
-const matchList = document.getElementById('match-list');
+new Autocomplete("#autocomplete", {
+    search: (input) => {
+        console.log(input);
+        const url = `get-products/?search=${input}`;
+        return new Promise((resolve) => {
+            fetch(url)
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log(data.payload);
+                    resolve(data.payload);
+                });
+        });
+    },
+    renderResult: (result, props) => {
+        console.log(props);
 
-// Search search-data.json and filter it
-const searchProducts = async searchText => {
-    const res = await fetch('/static/search-data/search-data.json');
-    const data = await res.json();
+        let group = "";
+        if (result.index % 3 == 0) {
+            group = `<li class='group'>Groups</li>`;
+        }
+        return `
+        ${group}
 
-    // Get matches to current text input
-    let matches = data.filter(product => {
-        const regex = new RegExp(`^${searchText}`, 'gi');
-        return product.name.match(regex);
-    });
+        <a href="product/${result.id}/">
+        <li ${props}>
+            <div class='wiki-title'>
+                <img src="${result.imgurl}" height=30 width=30%>
+                ${result.name}
+                </div>
+                </li>
+            </a>
 
-    if (searchText.length === 0) {
-        matches = [];
-        matchList.innerHTML = '';
-    }
-
-    outputHtml(matches);
-}
-
-// Show results in HTML
-const outputHtml = matches => {
-    if (matches.length > 0) {
-        const html = matches.map(match => `
-        <div class="card card-body mb-1">
-            <h4>${match.name}<span class="text-primary">${match.price}</span></h4>
-        </div>
-        `
-        ).join('');
-
-        matchList.innerHTML = html;
-    }
-}
-
-search.addEventListener('input', () => searchProducts(search.value));
+        `;
+    },
+    getResultValue: (result) => result.name,
+});
