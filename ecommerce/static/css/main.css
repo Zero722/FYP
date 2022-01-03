@@ -30,7 +30,8 @@ h1,h2,h3,h4,h5,h6{
 }
 
 #cart-icon{
-	width:25px;
+	height:35px;
+	width:100%;
 	display: inline-block;
 	margin-left: 15px;
 }
@@ -55,7 +56,8 @@ h1,h2,h3,h4,h5,h6{
 }
 
 .row-image{
-	width: 100px;
+	height:60px;
+	width: auto;
 }
 
 .form-field{
