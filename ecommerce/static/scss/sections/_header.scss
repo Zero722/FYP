@@ -2,16 +2,35 @@ header {
     position: sticky;
     top: 0;
     z-index: 9999;
+    background-color: #15161D;
+    padding: 15px 0;
 
-    .navbar {
-        background-color: #4f868c;
-        padding-top: 15px;
-        padding-bottom: 15px;
+    .logo {
+        img {
+            height: 70px;
+        }
+    }
 
-        .logo {
-            img {
-                height: 70px;
-            }
+    .cart {
+        position: relative;    
+        img {
+            height:35px;
+            display: inline-block;
+            margin-left: 15px;
+        }
+
+        p {
+            position: absolute;
+            top: -8px;
+            right: -16px;
+            width: 20px;
+            height: 20px;
+            color:#fff;
+            background-color: red;
+            font-size: 14px;
+            line-height: 20px;
+            text-align: center;            
+            border-radius: 50%;
         }
     }
 }
