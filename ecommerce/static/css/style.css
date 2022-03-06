@@ -7,15 +7,11 @@ header {
   position: sticky;
   top: 0;
   z-index: 9999;
+  background-color: #15161D;
+  padding: 15px 0;
 }
 
-header .navbar {
-  background-color: #4f868c;
-  padding-top: 15px;
-  padding-bottom: 15px;
-}
-
-header .navbar .logo img {
+header .logo img {
   height: 70px;
 }
 

@@ -173,13 +173,13 @@
 
         <header>
             <div class="container">
-                <div class="row">
+                <div class="row align-items-center">
                     <div class="col-lg-3">
                         <a href="{% url 'store' %}" class="logo mr-5">
-                            <img id="cart-icon" src="{% static 'images/logo.png' %}" height="35px" />
+                            <img src="{% static 'images/logo.webp' %}" />
                         </a>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-6">                        
                         <div id="autocomplete" class="autocomplete">
                             <input
                                 class="autocomplete-input form-control sm-2 mr-5 pl-5"
@@ -196,7 +196,7 @@
         
                
                             <a href="{% url 'cart' %}">
-                                <img id="cart-icon" src="{% static 'images/cart.png' %}" />
+                                <img id="cart-icon" src="{% static 'images/cart.jpg' %}" />
                             </a>
                             <p id="cart-total">0</p>
                         </div>
