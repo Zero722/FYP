@@ -182,7 +182,9 @@
             new Autocomplete('#autocomplete', {
                 search : input =>{
                     console.log(input)
-                    const url = `get-products/?search=${input}`
+                    
+                    const url = `{% url 'getproducts' %}?search=` + input
+                    
                     return new Promise(resolve => {
                         fetch(url)
                         .then(response=>response.json())
@@ -194,6 +196,7 @@
                 },
                 renderResult : (result, props) => {
                     console.log(props)
+                    const url_mask = "product/" + result.id                    
                     
                     let group = ''
                     if (result.index % 3 == 0){
@@ -202,7 +205,7 @@
                     return `
                     ${group}
 
-                    <a href="product/${result.id}/">
+                    <a href="{% url 'store' %}${url_mask}">
                     <li ${props}>
                         <div class='wiki-title'>
                             <img src="${result.imgurl}" height=30 width=30%>
