@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse, Http404
+from django.views.generic import ListView
 from django.db.models import Q 
 import json
 import datetime
@@ -11,11 +12,9 @@ from .utils import cookieCart, cartData, guestOrder
 
 def store(request):
 
-    data = cartData(request)
-    cartItems = data['cartItems']
-
     products = Product.objects.all()
-    context = {'products':products, 'cartItems': cartItems}
+    context = {'products':products}
+    
     return render(request, 'store/store.html', context)
 
 def details(request, product_id):
@@ -25,10 +24,8 @@ def details(request, product_id):
     except:
         raise Http404("Product doese not exist")
 
-    data = cartData(request)
-    cartItems = data['cartItems']
 
-    context = {'cartItems': cartItems, 'product':productId}
+    context = {'product':productId}
     return render(request, 'store/details.html', context)
     
 #Search
@@ -82,6 +79,15 @@ def checkout(request):
     context = {'items':items, 'order':order, 'cartItems': cartItems}
     return render(request, 'store/checkout.html', context)
    
+class SearchResultsView(ListView):
+    model = Product
+    template_name = 'store/search-product.html'
+    context_object_name = 'products'
+
+    def get_queryset(self):
+        query = self.request.GET.get('search')
+        products=Product.objects.filter(Q(name__icontains=query))
+        return products
    
 def updateItem(request):
     data = json.loads(request.body)
