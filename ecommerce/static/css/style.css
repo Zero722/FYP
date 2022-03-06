@@ -94,6 +94,24 @@ header .logo img {
   height: 70px;
 }
 
+header form.autocomplete {
+  position: relative;
+}
+
+header form.autocomplete input {
+  border-radius: 5px;
+}
+
+header form.autocomplete button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  background-color: #D10024;
+  border: 0;
+  border-radius: 0 5px 5px 0;
+}
+
 header .cart {
   position: relative;
 }
