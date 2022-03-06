@@ -89,85 +89,104 @@
         </script>
         <script src="https://unpkg.com/@trevoreyre/autocomplete-js"></script>
         <link
-        rel="stylesheet"
-        href="https://unpkg.com/@trevoreyre/autocomplete-js/dist/style.css"
+            rel="stylesheet"
+            href="https://unpkg.com/@trevoreyre/autocomplete-js/dist/style.css"
         />
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a href="{% url 'store' %}" class="logo mr-5">
-                <img id="cart-icon" src="{% static 'images/logo.png' %}" height="35px" />
-            </a>
-            <button
-                class="navbar-toggler"
-                type="button"
-                data-toggle="collapse"
-                data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-            >
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item dropdown mr-4">
-                        <a
-                            class="nav-link dropdown-toggle"
-                            href="#"
-                            id="navbarDropdown"
-                            role="button"
-                            data-toggle="dropdown"
-                            aria-haspopup="true"
-                            aria-expanded="false"
-                        >
-                            Category
-                        </a>
-                        <div
-                            class="dropdown-menu"
-                            aria-labelledby="navbarDropdown"
-                        >
-                            <a class="dropdown-item" href="#">A</a>
-                            <a class="dropdown-item" href="#">B</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">More...</a>
-                        </div>
-                    </li>
-                    <li>
-                        <div id="autocomplete" class="autocomplete">
-                            <input
-                                class="autocomplete-input form-control sm-2 mr-5 pl-5"
-                                type="search"
-                                placeholder="Search..."
-                                aria-label="Search"
-                                />
-                            <ul class="autocomplete-result-list"></ul>
-                        </div>
-                    </li>
-                    <li>
-                        <button
-                            class="
-                                btn btn-outline-success
-                                my-2 my-sm-0
-                                btn-dark
-                            "
-                            type="submit"
-                        >
-                            Search
-                        </button>
-                    </li>
-                </ul>
-
-                <div class="form-inline my-2 my-lg-0">
-                    <a href="#" class="btn btn-warning btn-dark">Login</a>
-
-       
-                    <a href="{% url 'cart' %}">
-                        <img id="cart-icon" src="{% static 'images/cart.png' %}" />
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-dark">
+                <div class="container">
+                    <a href="{% url 'store' %}" class="logo mr-5">
+                        <img src="{% static 'images/logo.png' %}" />
                     </a>
-                    <p id="cart-total">0</p>
+                    <button
+                        class="navbar-toggler"
+                        type="button"
+                        data-toggle="collapse"
+                        data-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                    >
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div
+                        class="collapse navbar-collapse"
+                        id="navbarSupportedContent"
+                    >
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item dropdown mr-4">
+                                <a
+                                    class="nav-link dropdown-toggle"
+                                    href="#"
+                                    id="navbarDropdown"
+                                    role="button"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                >
+                                    Category
+                                </a>
+                                <div
+                                    class="dropdown-menu"
+                                    aria-labelledby="navbarDropdown"
+                                >
+                                    <a class="dropdown-item" href="#">A</a>
+                                    <a class="dropdown-item" href="#">B</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#"
+                                        >More...</a
+                                    >
+                                </div>
+                            </li>
+                            <li>
+                                <div id="autocomplete" class="autocomplete">
+                                    <input
+                                        class="
+                                            autocomplete-input
+                                            form-control
+                                            sm-2
+                                            mr-5
+                                            pl-5
+                                        "
+                                        type="search"
+                                        placeholder="Search..."
+                                        aria-label="Search"
+                                    />
+                                    <ul class="autocomplete-result-list"></ul>
+                                </div>
+                            </li>
+                            <li>
+                                <button
+                                    class="
+                                        btn btn-outline-success
+                                        my-2 my-sm-0
+                                        btn-dark
+                                    "
+                                    type="submit"
+                                >
+                                    Search
+                                </button>
+                            </li>
+                        </ul>
+
+                        <div class="form-inline my-2 my-lg-0">
+                            <a href="#" class="btn btn-warning btn-dark"
+                                >Login</a
+                            >
+                            <a href="{% url 'cart' %}">
+                                <img
+                                    id="cart-icon"
+                                    src="{% static 'images/cart.png' %}"
+                                />
+                            </a>
+                            <p id="cart-total">0</p>
+                        </div>
+                    </div>
                 </div>
+<<<<<<< HEAD
             </div>
         </nav>
 
@@ -213,13 +232,15 @@
                             </div>
                             </li>
                         </a>
+=======
+            </nav>
+        </header>
 
-                    `
-                },
-                getResultValue: result => result.name
-            })
-        </script>
-        
+        <!-- Main content -->
+        {% block content %} {% endblock content %}
+        <!-- Main content -->        
+>>>>>>> 9fced4fdce70fc631a768c4554e47c1181b594f3
+
         <script
             src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
             integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
@@ -239,5 +260,9 @@
         ></script>
 
         <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+        <script
+            type="text/javascript"
+            src="{% static 'js/search.js' %}"
+        ></script>
     </body>
 </html>

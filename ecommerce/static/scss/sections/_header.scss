@@ -1,0 +1,17 @@
+header {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+
+    .navbar {
+        background-color: #4f868c;
+        padding-top: 15px;
+        padding-bottom: 15px;
+
+        .logo {
+            img {
+                height: 70px;
+            }
+        }
+    }
+}
