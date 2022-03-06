@@ -2,20 +2,26 @@ import json
 from store.models import *
 
 def total_cart_items(request):
-    try:
-        cart = json.loads(request.COOKIES['cart'])
-    except:
-        cart = {}
+    if request.user.is_authenticated:
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer = customer, complete=False)
+        cartItems = order.get_cart_items
 
-    items = []
-    cartItems = 0
-
-    for i in cart:
+    else:
         try:
-            cartItems += cart[i]["quantity"]
-        
+            cart = json.loads(request.COOKIES['cart'])
         except:
-            pass
+            cart = {}
+
+        items = []
+        cartItems = 0
+
+        for i in cart:
+            try:
+                cartItems += cart[i]["quantity"]
+            
+            except:
+                pass
 
     return {'totalCartItems':cartItems}
 
