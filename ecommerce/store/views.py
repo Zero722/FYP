@@ -86,7 +86,10 @@ class SearchResultsView(ListView):
 
     def get_queryset(self):
         query = self.request.GET.get('search')
-        products=Product.objects.filter(Q(name__icontains=query))
+        product_starts = Product.objects.filter(name__startswith = query)
+        product_contain = Product.objects.filter(Q(name__icontains = query), ~Q(name__startswith = query))
+        products = {'starts':product_starts, 'contain':product_contain}
+      
         return products
    
 def updateItem(request):
