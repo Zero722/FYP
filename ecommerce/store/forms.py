@@ -1,6 +1,7 @@
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from .models import Customer
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -16,3 +17,10 @@ class CustomUserCreationForm(UserCreationForm):
             {'class': 'form-control', 'placeholder': 'Enter password...'})
         self.fields['password2'].widget.attrs.update(
             {'class': 'form-control', 'placeholder': 'Confirm password...'})
+
+
+class CustomerForm(ModelForm):
+    class Meta:
+        model = Customer
+        fields = '__all__'
+        exclude = ['user']
