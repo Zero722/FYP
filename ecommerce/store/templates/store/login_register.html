@@ -39,6 +39,13 @@
         </div>
         {% endfor %}
 
+        {% for field in customer_form %}
+        <div>
+            <label class="form-label">{{field.label}}</label>
+            {{field}}
+        </div>
+        {% endfor %}
+
         <button type="submit">Register</button>
         <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
     </form>

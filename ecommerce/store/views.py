@@ -3,7 +3,7 @@ from django.http import JsonResponse, Http404
 from django.views.generic import ListView
 from django.db.models import Q 
 from django.contrib.auth import authenticate, login, logout
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, CustomerForm
 from django.contrib.auth.decorators import login_required
 
 import json
@@ -35,16 +35,22 @@ def logoutUser(request):
 def registerUser(request):
     page = 'register'
     form = CustomUserCreationForm()
+    customer_form = CustomerForm()
 
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
+        customer_form = CustomerForm(request.POST)
+        if form.is_valid() and customer_form.is_valid():
             user = form.save(commit=False)
             user.save()
-            
-            if user is not None:
-                login(request, user)
-                return redirect('store')
+            username = form.cleaned_data.get('username')
+            customer_obj = Customer.objects.create(
+                user = user,
+                name = customer_form.cleaned_data.get('name'),
+                email = customer_form.cleaned_data.get('email'),
+                address = customer_form.cleaned_data.get('address'),
+                contact = customer_form.cleaned_data.get('contact')
+            )
 
 
 
