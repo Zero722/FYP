@@ -1,7 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse, Http404
 from django.views.generic import ListView
 from django.db.models import Q 
+from django.contrib.auth import authenticate, login, logout
+from .forms import CustomUserCreationForm, CustomerForm
+from django.contrib.auth.decorators import login_required
+
 import json
 import datetime
 
@@ -9,6 +13,56 @@ from .models import *
 from .utils import cookieCart, cartData, guestOrder
 
 # Create your views here.
+def loginUser(request):
+    page = 'login'
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('store')
+
+    return render(request, 'store/login_register.html', {'page':page})
+
+
+def logoutUser(request):
+    logout(request)
+    return redirect('login')
+
+
+def registerUser(request):
+    page = 'register'
+    form = CustomUserCreationForm()
+    customer_form = CustomerForm()
+
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        customer_form = CustomerForm(request.POST)
+        if form.is_valid() and customer_form.is_valid():
+            user = form.save(commit=False)
+            user.save()
+            username = form.cleaned_data.get('username')
+            customer_obj = Customer.objects.create(
+                user = user,
+                name = customer_form.cleaned_data.get('name'),
+                email = customer_form.cleaned_data.get('email'),
+                address = customer_form.cleaned_data.get('address'),
+                contact = customer_form.cleaned_data.get('contact')
+            )
+            
+            if user is not None:
+                login(request, user)
+                return redirect('store')
+
+
+
+    context = {'form':form, 'page':page, 'customer_form': customer_form}
+    return render(request, 'store/login_register.html', context)
+
+
+
 
 def store(request):
 
@@ -18,7 +72,6 @@ def store(request):
     return render(request, 'store/store.html', context)
 
 def details(request, product_id):
-
     try:
         productId = Product.objects.get(pk=product_id)
     except:
@@ -58,6 +111,7 @@ def get_products(request):
         "payload" : payload
     })
 
+# @login_required(login_url='login')
 def cart(request):
 
     data = cartData(request)
@@ -68,7 +122,7 @@ def cart(request):
     context = {'items':items, 'order':order, 'cartItems': cartItems}
     return render(request, 'store/cart.html', context)
    
-
+# @login_required(login_url='login')
 def checkout(request):
 
     data = cartData(request)
@@ -86,9 +140,13 @@ class SearchResultsView(ListView):
 
     def get_queryset(self):
         query = self.request.GET.get('search')
-        products=Product.objects.filter(Q(name__icontains=query))
+        product_starts = Product.objects.filter(name__startswith = query)
+        product_contain = Product.objects.filter(Q(name__icontains = query), ~Q(name__startswith = query))
+        products = {'starts':product_starts, 'contain':product_contain}
+      
         return products
    
+# @login_required(login_url='login')
 def updateItem(request):
     data = json.loads(request.body)
     productId = data['productId']

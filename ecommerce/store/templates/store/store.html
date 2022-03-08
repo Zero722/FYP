@@ -1,6 +1,9 @@
 {% extends 'store/header.html' %}
 {% load static %}
 {% block content %}
+	{% if request.user.is_authenticated %}
+		<p>Hello {{request.user}}</p>
+	{% endif %}
 	<div class="container py-5">
 		<div class="row">
 			{% for product in products %}
