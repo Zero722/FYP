@@ -51,10 +51,14 @@ def registerUser(request):
                 address = customer_form.cleaned_data.get('address'),
                 contact = customer_form.cleaned_data.get('contact')
             )
+            
+            if user is not None:
+                login(request, user)
+                return redirect('store')
 
 
 
-    context = {'form':form, 'page':page}
+    context = {'form':form, 'page':page, 'customer_form': customer_form}
     return render(request, 'store/login_register.html', context)
 
 
