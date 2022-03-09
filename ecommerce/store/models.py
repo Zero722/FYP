@@ -34,58 +34,53 @@ class Product(models.Model):
             url = ''
         return url
 
-
-class Order(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True)
-    date_orderd = models.DateTimeField(auto_now_add=True)
-    complete = models.BooleanField(default=False, null=False, blank=False)
-    transaction_id = models.CharField(max_length=200, null=True)
-    status = models.BooleanField(default=False, null=True, blank=False) #added
-    total_price = models.FloatField(max_length=200, null=True) #added
-
-
-    def __str__(self):
-        return str(self.id)
-
-    @property
-    def shipping(self):
-        shipping = False
-        orderitems = self.orderitem_set.all()
-        for i in orderitems:
-            if i.product.digital == False:
-                shipping = True
-                break
-        return shipping
-
-    @property
-    def get_cart_total(self):
-        orderitems = self.orderitem_set.all()
-        total = sum([item.get_total for item in orderitems])
-        return total
-
-    @property
-    def get_cart_items(self):
-        orderitems = self.orderitem_set.all()
-        total = sum([item.quantity for item in orderitems])
-        return total
-
-
-
 class OrderItem(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
-    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, null=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
     quantity = models.IntegerField(default=0, null=True, blank=True)
-    date_added = models.DateTimeField(auto_now_add=True)
+    ordered = models.BooleanField(default=False)
 
     @property
-    def get_total(self):
+    def get_total_item_price(self):
         total = self.product.price * self.quantity
         return total
 
     def __str__(self):
-        info = str(self.order)+": "+str(self.product)+"->"+str(self.quantity)
+        info = str(self.quantity)+" of "+str(self.product.name)
         return str(info)
-    
+
+class Order(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, null=True)
+    items = models.ManyToManyField(OrderItem)
+    date_orderd = models.DateTimeField(auto_now_add=True)
+    ordered = models.BooleanField(default=False, null=False, blank=False)
+    being_delivered = models.BooleanField(default=False)
+    transaction_id = models.CharField(max_length=200, null=True)
+    total_price = models.FloatField(max_length=200, null=True) #added
+
+
+    def __str__(self):
+            return str(self.customer.user)
+
+    def get_total(self):
+        total = 0
+        for order_items in self.items.all():
+            total = total + order_items.get_total_item_price
+        return total
+
+    # @property
+    # def get_cart_total(self):
+    #     orderitems = self.orderitem_set.all()
+    #     total = sum([item.get_total for item in orderitems])
+    #     return total
+
+    @property
+    def get_cart_items(self):
+        total = 0
+        for order_item in self.items.all():
+            total += order_item.quantity
+        return total
+
 
 class ShippingAddress(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)

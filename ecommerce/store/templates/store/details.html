@@ -30,8 +30,9 @@
                         <div class="add-cart d-flex align-items-center mb-4">
                             {% comment %} <span>Quantity:</span> {% endcomment %}
                             {% comment %} <input type="number" value="1" min="1"> {% endcomment %}
-                            <button data-product={{product.id}} data-action='add' class="btn btn-primary update-cart">Add to cart</button>
+                            <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary">Add to cart</a>
                         </div>
+                        
                         <p>{{product.description}}</p>
                     </div>
                 </div>
