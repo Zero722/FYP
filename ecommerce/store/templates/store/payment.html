@@ -19,6 +19,11 @@
 
 </style>
 
+{% block header %}
+<!--Khalti Static Files-->
+<script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
+{% endblock header %}
+
 {% block content %}
 
   <main >
@@ -44,7 +49,7 @@
     <script>
         var config = {
             // replace the publicKey with yours
-            "publicKey": "test_public_key_9d277ea177d44904be882b5dd538dc4b",
+            "publicKey": "test_public_key_158423d6322946d2be6911788075dd4f",
             "productIdentity": "1234567890",
             "productName": "Dragon",
             "productUrl": "http://gameofthrones.wikia.com/wiki/Dragons",
@@ -58,9 +63,23 @@
             "eventHandler": {
                 onSuccess (payload) {
                     // hit merchant api for initiating verfication
+                    console.log("success");
                     console.log(payload);
+                    $.ajax({
+                        url: "{% url 'verify_payment' %}",
+                        type: "POST",
+                        data: payload,
+                        dataType: 'json',
+                        success: function(response) {
+                            console.log(response);
+                        },
+                        error: function(error) {
+                            console.log(error);
+                        }
+                    })
                 },
                 onError (error) {
+                    console.log("error");
                     console.log(error);
                 },
                 onClose () {
@@ -72,6 +91,7 @@
         var checkout = new KhaltiCheckout(config);
         var btn = document.getElementById("payment-button");
         btn.onclick = function () {
+            console.log("submitted");
             // minimum transaction amount must be 10, i.e 1000 in paisa.
             checkout.show({amount: 1000});
         }

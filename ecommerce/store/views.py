@@ -10,6 +10,8 @@ from django.contrib import messages
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
+import requests
 
 import json
 import datetime
@@ -182,6 +184,9 @@ class CheckoutView(LoginRequiredMixin, View):
 class PaymentView(LoginRequiredMixin, View):
     login_url = 'login'
     def get(self, *args, **kwargs):
+        print("111111111111111111111111111")
+        print(self.request)
+        print("222222222222222222222222222")
         try:
             customer = get_object_or_404(Customer, user=self.request.user)
             order = Order.objects.get(customer=customer, ordered=False)
@@ -312,3 +317,31 @@ def remove_from_cart(request, id):
     else:
         # messages.info(request, "You do not have an active order")
         return redirect(request. META['HTTP_REFERER'])
+
+
+@csrf_exempt
+def verify_payment(request):
+    data = request.POST
+    token = data['token']
+    amount = data['amount']
+
+    url = "https://khalti.com/api/v2/payment/verify/"
+    payload = {
+    "token": token,
+    "amount": amount
+    }
+    headers = {
+    "Authorization": "Key test_secret_key_319ae9296dd644e396434975266e231d"
+    }
+
+
+    response = requests.post(url, payload, headers = headers)
+
+    response_data = json.loads(response.text)
+    status_code = str(response.status_code)
+
+    if status_code == '400':
+        response = JsonResponse({'status':'false','message':response_data['detail']}, status=500)
+        return response
+
+    return JsonResponse(f"Payment Done !! With IDX. {response_data['user']['idx']}",safe=False)
