@@ -11,7 +11,7 @@ header {
         }
     }
 
-    form.autocomplete {
+    .autocomplete {
         position: relative;
 
         input {
@@ -24,8 +24,38 @@ header {
             right: 0;
             height: 100%;
             background-color: $primary;
+            color: $white;
+            font-weight: 500;
             border: 0;
             border-radius: 0 5px 5px 0;
+            padding: 0 20px;
+            transition: 250ms ease-in;
+            &:hover {
+                background-color: darken($primary, 5%);
+            }
+        }
+
+        &-result-list {
+            width: calc(100% - 1px) !important;
+            margin-left: 1px;
+            cursor: pointer;
+            a {
+                color: $black !important;
+                &:hover {
+                    color: $primary !important;
+                    text-decoration: none !important;
+                }
+
+                li {
+                    cursor: pointer;
+                }
+                img {
+                    height: 60px;
+                    width: 70px;
+                    object-fit: cover;
+                    margin-right: 8px;
+                }
+            }            
         }
     }
 
