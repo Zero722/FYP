@@ -39,6 +39,8 @@ def loginUser(request):
         if user is not None:
             login(request, user)
             return redirect('store')
+        else:
+            messages.add_message(request, messages.INFO, 'Invalid username or password')
 
     return render(request, 'store/login_register.html', {'page':page})
 
@@ -71,6 +73,10 @@ def registerUser(request):
             if user is not None:
                 login(request, user)
                 return redirect('store')
+
+        else:
+            messages.add_message(request, messages.INFO, 'Cannot register. Please fill valid information')
+
 
     context = {'form':form, 'page':page, 'customer_form': customer_form}
     return render(request, 'store/login_register.html', context)
@@ -184,9 +190,6 @@ class CheckoutView(LoginRequiredMixin, View):
 class PaymentView(LoginRequiredMixin, View):
     login_url = 'login'
     def get(self, *args, **kwargs):
-        print("111111111111111111111111111")
-        print(self.request)
-        print("222222222222222222222222222")
         try:
             customer = get_object_or_404(Customer, user=self.request.user)
             order = Order.objects.get(customer=customer, ordered=False)
@@ -213,41 +216,6 @@ class SearchResultsView(ListView):
       
         return products
    
-
-
-# from django.views.decorators.csrf import csrf_exempt
-# @csrf_exempt
-
-# def processOrder(request):
-#     transaction_id = datetime.datetime.now().timestamp()
-#     data = json.loads(request.body)
-
-#     if request.user.is_authenticated:
-#         customer = request.user.customer
-#         order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        
-#     # else:
-#     #     customer, order = guestOrder(request, data)
-    
-#     total = float(data['form']['total'])
-#     order.transaction_id = transaction_id
-
-#     if total == order.get_cart_total:
-#         order.complete = True
-#     order.save()    
-
-#     if order.shipping == True:
-#         ShippingAddress.objects.create(
-#             customer=customer,
-#             order=order,
-#             address=data['shipping']['address'],
-#             city=data['shipping']['city'],
-#             state=data['shipping']['state'],
-#             zipcode=data['shipping']['zipcode'],
-#         )
-
-#     return JsonResponse('Payment Complete', safe=False)
-    
 @login_required(login_url='login')
 def add_to_cart(request, id):
     product = get_object_or_404(Product, id=id)
@@ -324,6 +292,9 @@ def verify_payment(request):
     data = request.POST
     token = data['token']
     amount = data['amount']
+    print("Amount: ",amount)
+    print("Token: ",token)
+
 
     url = "https://khalti.com/api/v2/payment/verify/"
     payload = {
@@ -344,4 +315,6 @@ def verify_payment(request):
         response = JsonResponse({'status':'false','message':response_data['detail']}, status=500)
         return response
 
+    print("Amount: ",amount)
+    print("Token: ",token)
     return JsonResponse(f"Payment Done !! With IDX. {response_data['user']['idx']}",safe=False)

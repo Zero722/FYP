@@ -22,6 +22,7 @@
 {% block header %}
 <!--Khalti Static Files-->
 <script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 {% endblock header %}
 
 {% block content %}
@@ -47,6 +48,10 @@
         </div>
     </div>
     <script>
+        $(document).ready(function() {
+            console.log($.ajax);
+          });
+
         var config = {
             // replace the publicKey with yours
             "publicKey": "test_public_key_158423d6322946d2be6911788075dd4f",
@@ -72,8 +77,10 @@
                         dataType: 'json',
                         success: function(response) {
                             console.log(response);
+                            console.log("123456");
                         },
                         error: function(error) {
+                            console.log("654321");
                             console.log(error);
                         }
                     })
@@ -93,7 +100,7 @@
         btn.onclick = function () {
             console.log("submitted");
             // minimum transaction amount must be 10, i.e 1000 in paisa.
-            checkout.show({amount: 1000});
+            checkout.show({amount: 2000});
         }
     </script>
   </main>
