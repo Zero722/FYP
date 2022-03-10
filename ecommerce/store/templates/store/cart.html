@@ -16,7 +16,7 @@
 							<th><h5>Total:<strong> ${{object.get_total}}</strong></h5></th>
 							<th>
 								{% if object.get_total %}
-								<a  style="float:right; margin:5px;" class="btn btn-success" href="#">Checkout</a>
+								<a  style="float:right; margin:5px;" class="btn btn-success" href="{% url 'checkout' %}">Checkout</a>
 								{% endif %}
 							</th>
 						</tr>

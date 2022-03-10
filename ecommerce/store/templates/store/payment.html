@@ -1,0 +1,82 @@
+{% extends 'store/header.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+<style>
+  body {
+      background-color: #f8f9fd;
+  }
+  .form-wrap {
+      max-width: 450px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0px 10px 34px -15px rgb(0 0 0 / 24%);
+      margin: 100px auto 0;
+  }
+  .form-control {
+      height: 50px;
+  }
+
+</style>
+
+{% block content %}
+
+  <main >
+    <div class="container">
+      <h2 class="my-5 h2 text-center">Payment</h2>
+      
+          <div class="card">
+            {% comment %} <form method="POST" class="card-body">
+              {% csrf_token %}
+
+              {{form|crispy}}
+              <br>
+            </form> {% endcomment %}
+            <button id="payment-button" style="background-color: #5C2D91; cursor: pointer; color: #fff; border: none; padding: 5px 10px; border-radius: 5px; width: 20%;">Pay with Khalti</button>
+
+          </div>
+
+
+        <div class="col-md-4 mb-4">
+          {% include "store/order_snippet.html" %}
+        </div>
+    </div>
+    <script>
+        var config = {
+            // replace the publicKey with yours
+            "publicKey": "test_public_key_9d277ea177d44904be882b5dd538dc4b",
+            "productIdentity": "1234567890",
+            "productName": "Dragon",
+            "productUrl": "http://gameofthrones.wikia.com/wiki/Dragons",
+            "paymentPreference": [
+                "KHALTI",
+                "EBANKING",
+                "MOBILE_BANKING",
+                "CONNECT_IPS",
+                "SCT",
+                ],
+            "eventHandler": {
+                onSuccess (payload) {
+                    // hit merchant api for initiating verfication
+                    console.log(payload);
+                },
+                onError (error) {
+                    console.log(error);
+                },
+                onClose () {
+                    console.log('widget is closing');
+                }
+            }
+        };
+
+        var checkout = new KhaltiCheckout(config);
+        var btn = document.getElementById("payment-button");
+        btn.onclick = function () {
+            // minimum transaction amount must be 10, i.e 1000 in paisa.
+            checkout.show({amount: 1000});
+        }
+    </script>
+  </main>
+
+{% endblock content %}
+

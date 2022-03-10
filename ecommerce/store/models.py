@@ -9,7 +9,7 @@ class Customer(models.Model):
     name = models.CharField(max_length=200, null=True)
     email = models.EmailField(max_length=200, null=True)
     address = models.CharField(max_length=200, null=True) #added
-    contact = models.BigIntegerField(null=True) #added
+    contact = models.BigIntegerField(null=True)
 
     def __str__(self):
         return self.name
@@ -57,6 +57,7 @@ class Order(models.Model):
     being_delivered = models.BooleanField(default=False)
     transaction_id = models.CharField(max_length=200, null=True)
     total_price = models.FloatField(max_length=200, null=True) #added
+    sphipping_address = models.ForeignKey('ShippingAddress', on_delete=models.SET_NULL, blank=True, null=True)
 
 
     def __str__(self):
@@ -68,11 +69,6 @@ class Order(models.Model):
             total = total + order_items.get_total_item_price
         return total
 
-    # @property
-    # def get_cart_total(self):
-    #     orderitems = self.orderitem_set.all()
-    #     total = sum([item.get_total for item in orderitems])
-    #     return total
 
     @property
     def get_cart_items(self):
@@ -84,15 +80,13 @@ class Order(models.Model):
 
 class ShippingAddress(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
-    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
-    address = models.CharField(max_length=200, null=True)
-    city = models.CharField(max_length=200, null=True)
-    state = models.CharField(max_length=200, null=True)
-    zipcode = models.CharField(max_length=200, null=True)
-    date_added = models.DateTimeField(auto_now_add=True)
+    street_address = models.CharField(max_length=200, null=True)
+    apartment_address = models.CharField(max_length=200, null=True)
+    country = models.CharField(max_length=200, null=True)
+    contact = models.BigIntegerField(null=True)
 
     def __str__(self):
-        return str(self.address)
+        return str(self.customer.user)
 
 
 

@@ -3,8 +3,9 @@ from django.http import JsonResponse, Http404
 from django.views.generic import ListView, View
 from django.db.models import Q 
 from django.contrib.auth import authenticate, login, logout
-from .forms import CustomUserCreationForm, CustomerForm
+from .forms import CustomUserCreationForm, CustomerForm, CheckoutForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
@@ -22,6 +23,7 @@ def custom_login(request):
         return redirect('store')
     else:
         return loginUser(request)
+
 
 def loginUser(request):
     if 'next' in request.GET:
@@ -79,6 +81,7 @@ def store(request):
     
     return render(request, 'store/store.html', context)
 
+
 def details(request, product_id):
     try:
         productId = Product.objects.get(pk=product_id)
@@ -87,7 +90,8 @@ def details(request, product_id):
 
     context = {'product':productId}
     return render(request, 'store/details.html', context)
-    
+
+
 #Search
 def get_products(request):
     search = request.GET.get('search')
@@ -134,17 +138,63 @@ def cart(request):
         return redirect("/")
 
    
-# @login_required(login_url='login')
-# def checkout(request):
+class CheckoutView(LoginRequiredMixin, View):
+    login_url = 'login'
+    def get(self, *args, **kwargs):
+        try:
+            customer = get_object_or_404(Customer, user=self.request.user)
+            order = Order.objects.get(customer=customer, ordered=False)
+            form = CheckoutForm()
+            context = {
+                'form': form,
+                'order': order
+            }
+            return render(self.request, 'store/checkout.html', context)
+        except ObjectDoesNotExist:
+            return redirect('checkout')
 
-#     data = cartData(request)
-#     cartItems = data['cartItems']
-#     order = data['order']
-#     items = data['items']
+    def post(self, *args, **kwargs):
+        form = CheckoutForm(self.request.POST or None)
+        try:
+            customer = get_object_or_404(Customer, user=self.request.user)
+            order = Order.objects.get(customer=customer, ordered=False)
+            if form.is_valid():
+                street_address = form.cleaned_data.get('street_address')
+                appartment_address = form.cleaned_data.get('appartment_address')
+                country = form.cleaned_data.get('country')
+                contact = form.cleaned_data.get('contact')
+                shipping_address = ShippingAddress(
+                    customer = get_object_or_404(Customer, user=self.request.user),
+                    street_address = street_address,
+                    apartment_address = appartment_address,
+                    country = country,
+                    contact = contact
+                )
+                shipping_address.save()
+                order.shipping_address = shipping_address
+                order.save()
+                return redirect('checkout')
 
-#     context = {'items':items, 'order':order, 'cartItems': cartItems}
-#     return render(request, 'store/checkout.html', context)
-   
+        except ObjectDoesNotExist:
+            return redirect("/")
+        
+        
+class PaymentView(LoginRequiredMixin, View):
+    login_url = 'login'
+    def get(self, *args, **kwargs):
+        try:
+            customer = get_object_or_404(Customer, user=self.request.user)
+            order = Order.objects.get(customer=customer, ordered=False)
+            form = CheckoutForm()
+            context = {
+                'form': form,
+                'order': order
+            }
+            return render(self.request, 'store/payment.html', context)
+        except ObjectDoesNotExist:
+            return redirect('payment')
+  
+  
 class SearchResultsView(ListView):
     model = Product
     template_name = 'store/search-product.html'
