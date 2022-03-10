@@ -20,7 +20,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .thumbnail {
   width: 100%;
-  height: 200px;
+  height: 250px;
   -o-object-fit: cover;
      object-fit: cover;
   -webkit-box-shadow: -1px -3px 5px -2px #d6d6d6;
@@ -94,22 +94,58 @@ header .logo img {
   height: 70px;
 }
 
-header form.autocomplete {
+header .autocomplete {
   position: relative;
 }
 
-header form.autocomplete input {
+header .autocomplete input {
   border-radius: 5px;
 }
 
-header form.autocomplete button {
+header .autocomplete button {
   position: absolute;
   top: 0;
   right: 0;
   height: 100%;
   background-color: #D10024;
+  color: #fff;
+  font-weight: 500;
   border: 0;
   border-radius: 0 5px 5px 0;
+  padding: 0 20px;
+  -webkit-transition: 250ms ease-in;
+  transition: 250ms ease-in;
+}
+
+header .autocomplete button:hover {
+  background-color: #b80020;
+}
+
+header .autocomplete-result-list {
+  width: calc(100% - 1px) !important;
+  margin-left: 1px;
+  cursor: pointer;
+}
+
+header .autocomplete-result-list a {
+  color: #000 !important;
+}
+
+header .autocomplete-result-list a:hover {
+  color: #D10024 !important;
+  text-decoration: none !important;
+}
+
+header .autocomplete-result-list a li {
+  cursor: pointer;
+}
+
+header .autocomplete-result-list a img {
+  height: 60px;
+  width: 70px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  margin-right: 8px;
 }
 
 header .cart {
