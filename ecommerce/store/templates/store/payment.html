@@ -100,7 +100,7 @@
         btn.onclick = function () {
             console.log("submitted");
             // minimum transaction amount must be 10, i.e 1000 in paisa.
-            checkout.show({amount: 2000});
+            checkout.show({amount: {{order.get_total}}*100 });
         }
     </script>
   </main>

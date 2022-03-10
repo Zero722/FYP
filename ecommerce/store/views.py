@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.shortcuts import render, redirect,  get_object_or_404
 from django.http import JsonResponse, Http404
 from django.views.generic import ListView, View
@@ -181,7 +182,7 @@ class CheckoutView(LoginRequiredMixin, View):
                 shipping_address.save()
                 order.shipping_address = shipping_address
                 order.save()
-                return redirect('checkout')
+                return redirect('payment')
 
         except ObjectDoesNotExist:
             return redirect("/")
@@ -289,12 +290,14 @@ def remove_from_cart(request, id):
 
 @csrf_exempt
 def verify_payment(request):
+    customer = get_object_or_404(Customer, user=request.user)
+    order = Order.objects.get(customer=customer, ordered=False)
+
     data = request.POST
     token = data['token']
     amount = data['amount']
     print("Amount: ",amount)
     print("Token: ",token)
-
 
     url = "https://khalti.com/api/v2/payment/verify/"
     payload = {
@@ -305,7 +308,6 @@ def verify_payment(request):
     "Authorization": "Key test_secret_key_319ae9296dd644e396434975266e231d"
     }
 
-
     response = requests.post(url, payload, headers = headers)
 
     response_data = json.loads(response.text)
@@ -313,8 +315,24 @@ def verify_payment(request):
 
     if status_code == '400':
         response = JsonResponse({'status':'false','message':response_data['detail']}, status=500)
+        messages.error(request, 'Payment cannot be Processed.')
+
         return response
+
+    # Creating Payment
+    payment = Payment()
+    payment.khalti_id = token
+    payment.customer = customer
+    payment.amount = float(amount)/100
+    payment.save()
+
+    # Assign payment to order
+    order.ordered = True
+    order.payment = payment
+    order.save()
+    messages.success(request, 'Payment Complete.')
 
     print("Amount: ",amount)
     print("Token: ",token)
-    return JsonResponse(f"Payment Done !! With IDX. {response_data['user']['idx']}",safe=False)
+
+    return JsonResponse(f"Payment Done !! With IDX. {response_data['user']['idx']}",safe=False), redirect('store')

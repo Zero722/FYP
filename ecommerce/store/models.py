@@ -1,3 +1,4 @@
+from sqlite3 import Timestamp
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.deletion import SET_NULL
@@ -58,6 +59,8 @@ class Order(models.Model):
     transaction_id = models.CharField(max_length=200, null=True)
     total_price = models.FloatField(max_length=200, null=True) #added
     sphipping_address = models.ForeignKey('ShippingAddress', on_delete=models.SET_NULL, blank=True, null=True)
+    payment = models.ForeignKey('Payment', on_delete=models.SET_NULL, blank=True, null=True)
+
 
 
     def __str__(self):
@@ -88,6 +91,15 @@ class ShippingAddress(models.Model):
     def __str__(self):
         return str(self.customer.user)
 
+
+class Payment(models.Model):
+    khalti_id = models.CharField(max_length=100)
+    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
+    amount = models.DecimalField(max_digits=7, decimal_places=2)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.customer.user)
 
 
 
