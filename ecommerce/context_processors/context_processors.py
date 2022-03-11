@@ -3,7 +3,7 @@ from store.models import Order, Customer
 
 
 def total_cart_items(request):
-    if request.user.is_authenticated and not request.user.is_superuser:
+    if request.user.is_authenticated:
         customer = Customer.objects.filter(user=request.user).first()
 
         if customer is None:

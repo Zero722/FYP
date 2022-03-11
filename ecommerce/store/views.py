@@ -258,7 +258,9 @@ def cart(request):
 
     except ObjectDoesNotExist:
         messages.warning(request, "You do not have an active order")
-        return redirect("/")
+        context = {}
+        return render(request, "store/cart.html", context)
+
 
 
 class CheckoutView(LoginRequiredMixin, View):
