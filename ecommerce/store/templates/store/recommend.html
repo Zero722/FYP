@@ -13,7 +13,7 @@
         <div class="container py-5">
             <div class="row">
                 {% if product_list %}
-                    {% for product in product_list %}
+                    {% for product in product_list|slice:":3" %}
                     <div class="col-md-6 col-lg-4 mb-4">
                         <img class="thumbnail" src="{{product.imageURL}}">
                         <div class="box-element product">
