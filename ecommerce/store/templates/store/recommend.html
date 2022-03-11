@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+ 
+    <center><h2>Recommendations</h2></center>
+    
+        <div class="container py-5">
+            <div class="row">
+                {% if product_list %}
+                    {% for product in product_list %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <img class="thumbnail" src="{{product.imageURL}}">
+                        <div class="box-element product">
+                            <h6><strong>{{product.name}}</strong></h6>
+                            <hr>
+            
+                            <a href= "{% url 'add_to_cart' product.id %}" class="btn btn-outline-secondary add-btn">Add to Cart</a>
+                            <a class="btn btn-outline-success" href = "{% url 'details' product.id %}">View</a>
+                            <h4 style="display: inline-block; float: right"><strong>${{product.price|floatformat:2}}</strong></h4>
+            
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    
+    {% block content %} 
+    {% endblock content %}
+    
+</body>
+</html>
+
+	

@@ -13,6 +13,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 import requests
+import pandas as pd
+from django.db.models import Case, When
+
 
 import json
 import datetime
@@ -87,17 +90,104 @@ def store(request):
 
     products = Product.objects.all()
     context = {'products':products}
-    
+
+    if request.user.is_authenticated:
+        product_rating=pd.DataFrame(list(Myrating.objects.all().values()))
+        print(product_rating)
+        new_user=product_rating.user_id.unique().shape[0]
+        current_user_id= request.user.id
+        # if new user not rated any product
+        if current_user_id>new_user:
+            product=Product.objects.get(id=19)
+            q=Myrating(user=request.user,product=product,rating=0)
+            q.save()
+        userRatings = product_rating.pivot_table(index=['user_id'],columns=['product_id'],values='rating')
+        userRatings = userRatings.fillna(0,axis=1)
+        corrMatrix = userRatings.corr(method='pearson')
+
+        user = pd.DataFrame(list(Myrating.objects.filter(user=request.user).values())).drop(['user_id','id'],axis=1)
+        user_filtered = [tuple(x) for x in user.values]
+        product_id_watched = [each[0] for each in user_filtered]
+
+        similar_products = pd.DataFrame()
+        for product,rating in user_filtered:
+            similar_products = similar_products.append(get_similar(product,rating,corrMatrix),ignore_index = True)
+
+        products_id = list(similar_products.sum().sort_values(ascending=False).index)
+        products_id_recommend = [each for each in products_id if each not in product_id_watched]
+        preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(products_id_recommend)])
+        product_list=list(Product.objects.filter(id__in = products_id_recommend).order_by(preserved)[:10])
+
+        print('product=',product_list)
+        context = {'product_list': product_list, 'products':products}    
+        return render(request, 'store/store.html', context)
+
+    context = {'products':products}
     return render(request, 'store/store.html', context)
 
 
 def details(request, product_id):
     try:
-        productId = Product.objects.get(pk=product_id)
+        product = Product.objects.get(pk=product_id)
+        
+        if request.user.is_authenticated:
+            user = get_object_or_404(Customer, user=request.user)
+            temp = list(MyList.objects.all().values().filter(product_id=product_id,user=request.user))
+            if temp:
+                update = temp[0]['watch']
+            else:
+                update = False
+            if request.method == "POST":
+
+                # For my list
+                if 'watch' in request.POST:
+                    watch_flag = request.POST['watch']
+                    if watch_flag == 'on':
+                        update = True
+                    else:
+                        update = False
+                    if MyList.objects.all().values().filter(product_id=product_id,user=request.user):
+                        MyList.objects.all().values().filter(product_id=product_id,user=request.user).update(watch=update)
+                    else:
+                        q=MyList(user=request.user,product=product,watch=update)
+                        q.save()
+                    if update:
+                        messages.success(request, "Product added to your list!")
+                    else:
+                        messages.success(request, "Product removed from your list!")
+
+                    
+                # For rating
+                else:
+                    rate = request.POST['rating']
+                    if Myrating.objects.all().values().filter(product_id=product_id,user=request.user):
+                        Myrating.objects.all().values().filter(product_id=product_id,user=request.user).update(rating=rate)
+                    else:
+                        q=Myrating(user=request.user,product=product,rating=rate)
+                        q.save()
+
+                    messages.success(request, "Rating has been submitted!")
+
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            out = list(Myrating.objects.filter(user=request.user.id).values())
+
+            # To display ratings in the product detail page
+            product_rating = 0
+            rate_flag = False
+            for each in out:
+                if each['product_id'] == product_id:
+                    product_rating = each['rating']
+                    rate_flag = True
+                    break
+
+            context = {'product': product,'product_rating':product_rating,'rate_flag':rate_flag,'update':update}
+            return render(request, 'store/details.html', context)
+
+
     except:
         raise Http404("Product does not exist")
 
-    context = {'product':productId}
+    context = {'product':product}
     return render(request, 'store/details.html', context)
 
 
@@ -335,4 +425,23 @@ def verify_payment(request):
     print("Amount: ",amount)
     print("Token: ",token)
 
-    return JsonResponse(f"Payment Done !! With IDX. {response_data['user']['idx']}",safe=False), redirect('store')
+    return JsonResponse(f"Payment Done !! With IDX. {response_data['user']['idx']}",safe=False)
+
+@login_required(login_url='login')
+def wishlist(request):
+    products = Product.objects.filter(mylist__watch=True,mylist__user=request.user)
+    query = request.GET.get('q')
+
+    if query:
+        products = Product.objects.filter(Q(title__icontains=query)).distinct()
+        return render(request, 'store/watch.html', {'products': products})
+
+    return render(request, 'store/wishlist.html', {'products': products})
+
+
+# To get similar products based on user rating
+def get_similar(product_name,rating,corrMatrix):
+    similar_ratings = corrMatrix[product_name]*(rating-2.5)
+    similar_ratings = similar_ratings.sort_values(ascending=False)
+    return similar_ratings
+

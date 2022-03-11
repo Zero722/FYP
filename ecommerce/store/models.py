@@ -2,6 +2,8 @@ from sqlite3 import Timestamp
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.deletion import SET_NULL
+from django.core.validators import MaxValueValidator, MinValueValidator
+
 
 # Create your models here.
 
@@ -100,6 +102,16 @@ class Payment(models.Model):
 
     def __str__(self):
         return str(self.customer.user)
+
+class Myrating(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    rating = models.IntegerField(default=0, validators=[MaxValueValidator(5), MinValueValidator(0)])
+
+class MyList(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    watch = models.BooleanField(default=False)
 
 
 

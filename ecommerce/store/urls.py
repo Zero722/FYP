@@ -17,4 +17,6 @@ urlpatterns = [
     path("remove_from_cart/<int:id>/", views.remove_from_cart, name="remove_from_cart"),
     # payment url
     path("api/verify_payment", verify_payment, name="verify_payment"),
+    path('wishlist/', views.wishlist, name='wishlist'),
+
 ]

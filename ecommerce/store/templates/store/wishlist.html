@@ -1,11 +1,9 @@
 {% extends 'store/header.html' %}
 {% load static %}
 {% block content %}
+<h1>Wishlist:</h1>
 	{% if request.user.is_authenticated %}
 		<p>Hello {{request.user}}</p>
-		{% include "store/recommend.html" %}
-		<center><h2>More Products</h2></center>
-		
 	{% endif %}
 	<div class="container py-5">
 		<div class="row">

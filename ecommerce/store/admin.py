@@ -10,3 +10,5 @@ admin.site.register(OrderItem)
 admin.site.register(ShippingAddress)
 admin.site.register(Payment)
 
+admin.site.register(Myrating)
+admin.site.register(MyList)

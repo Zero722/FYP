@@ -87,6 +87,64 @@
         href="https://unpkg.com/@trevoreyre/autocomplete-js/dist/style.css"
         />
 
+        <!-- For Product details page -->
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
+        <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css' >
+
+        <style type="text/css">
+            element.style{
+                background-color:#072d4e;
+            }
+            .thumbnail p, .thumbnail h4 {
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                }
+            .star-rating {
+                line-height:32px;
+                font-size:1.25em;
+                margin-left:-33px;
+                }
+            .star-rating .fa-star{
+            color: yellow;
+            }
+            .heart-rating {
+                line-height:32px;
+                font-size:1.25em;
+                margin-left:-33px;
+                }
+            .heart-rating .fa-heart{
+            color:yellow;
+            }
+            .button {
+              background-color: #4CAF50;
+              border: none;
+              color: white;
+              padding: 10px 32px;
+              text-align: center;
+              text-decoration: none;
+              display: inline-block;
+              font-size: 16px;
+              margin: 4px 4px;
+              cursor: pointer;
+              margin-left:45px;
+            }
+            .button1 {
+              background-color: #4CAF50;
+              border: none;
+              color: white;
+              padding: 12px 30px;
+              text-align: center;
+              text-decoration: none;
+              display: inline-block;
+              font-size: 16px;
+              margin: -4px -4px;
+              cursor: pointer;
+              margin-left:4px;
+            }
+        </style>
+        <!-- For Product details page end -->       
+
         {% block header %}
         {% endblock header %}
 
@@ -196,5 +254,46 @@
          </script>
 
 
+        <!-- For Product details page -->
+        <script type="text/javascript" src="{%static 'recommend/js/jquery.min.js'%}">
+	    </script>
+
+	    <script type="text/javascript" src="{%static 'recommend/js/bootstrap.min.js'%}">
+	    </script>
+        <script type="text/javascript">
+        var $star_rating = $('.star-rating .fa');
+    
+        var SetRatingStar = function() {
+            return $star_rating.each(function() {
+            if (parseInt($star_rating.siblings('input.rating-value').val()) >= parseInt($(this).data('rating'))) {
+                return $(this).removeClass('fa-star-o').addClass('fa-star');
+            } else {
+            return $(this).removeClass('fa-star').addClass('fa-star-o');
+            }
+            });
+            };
+    
+        $star_rating.on('click', function() {
+        $star_rating.siblings('input.rating-value').val($(this).data('rating'));
+        return SetRatingStar();
+        });
+    
+        SetRatingStar();
+        $(document).ready(function() {
+    
+        });
+    
+        </script>
+        <script type="text/javascript">
+            function validateForm(){
+            var x = document.forms["ratingForm"]["rating"].value;
+            if(x=="0"){
+                alert("Invalid Input");
+                return false;
+            }
+            }
+        </script>
+        <!-- For Product details page end -->
+        
     </body>
 </html>
