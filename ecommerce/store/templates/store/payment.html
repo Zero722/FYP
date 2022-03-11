@@ -85,6 +85,7 @@
                         dataType: 'json',
                         success: function(response) {
                             console.log(response);
+                            window.location.href = "{% url 'store' %}";
                             console.log("123456");
                         },
                         error: function(error) {

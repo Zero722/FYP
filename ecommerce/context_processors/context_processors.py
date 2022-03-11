@@ -10,6 +10,10 @@ def total_cart_items(request):
             return {"totalCartItems": 0}
 
         order = Order.objects.filter(customer=customer, ordered=False).first()
+
+        if order is None:
+            return {"totalCartItems": 0}
+
         cartItems = order.get_cart_items
 
     else:
