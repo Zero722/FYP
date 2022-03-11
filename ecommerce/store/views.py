@@ -356,7 +356,7 @@ def add_to_cart(request, id):
 
     else:
         date_orderd = timezone.now()
-        order = Order.objects.create(user=request.user, date_orderd=date_orderd)
+        order = Order.objects.create(customer=customer, date_orderd=date_orderd)
         order.items.add(order_item)
         order_item.quantity += 1
         order_item.save()
