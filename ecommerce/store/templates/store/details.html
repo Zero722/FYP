@@ -32,6 +32,18 @@
                             {% comment %} <input type="number" value="1" min="1"> {% endcomment %}
                             <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary">Add to cart</a>
                         </div>
+
+                        <form class="form-horizontal mb-3" role="search" method="post">
+                            {% csrf_token %}
+                            <div class="star-rating">
+                                <span>Add to my list  </span>
+                                {% if update %}
+                                <input type="submit" class="btn btn-primary" value="Remove from Wishlist"  name="watch">
+                                {% else %}
+                                <input type="submit" class="btn btn-primary" value="Add to Wishlist" name="watch">
+                                {% endif %}
+                            </div>
+                        </form>
                     
                         <form class="form-horizontal mb-3" role="search" method="post"  onsubmit="return validateForm()"  name="ratingForm">
                             <div class="star-rating mb-2">
@@ -52,17 +64,7 @@
                             <input type="submit" class="btn btn-primary" value="Submit">
                         </form>
                                 
-                        <form class="form-horizontal mb-3" role="search" method="post">
-                            {% csrf_token %}
-                            <div class="star-rating">
-                                <span>Add to my list  </span>
-                                {% if update %}
-                                <input type="submit" class="btn btn-primary" value="Remove"  name="watch">
-                                {% else %}
-                                <input type="submit" class="btn btn-primary" value="Add" name="watch">
-                                {% endif %}
-                            </div>
-                        </form>
+                        
                     
                         <h3>Product description:</h3>
                         <p>{{product.description}}</p>

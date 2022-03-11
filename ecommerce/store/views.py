@@ -164,7 +164,7 @@ def details(request, product_id):
             if request.method == "POST":
                 # For my list
                 if "watch" in request.POST:
-                    if request.POST.get("watch") == "Add":
+                    if request.POST.get("watch") == "Add to Wishlist":
                         update = True
                     else:
                         update = False
