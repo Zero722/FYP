@@ -2,7 +2,6 @@
 {% load static %}
 {% block content %}
 	{% if request.user.is_authenticated %}
-		<p>Hello {{request.user}}</p>
 		{% include "store/recommend.html" %}
 		<center><h2>More Products</h2></center>
 		
