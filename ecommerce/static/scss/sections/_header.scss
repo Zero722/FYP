@@ -2,12 +2,14 @@ header {
     position: sticky;
     top: 0;
     z-index: 9999;
-    background-color: #15161D;
+    background-color: $white;
     padding: 15px 0;
+    box-shadow: 0 0 4px #ccc;
 
     .logo {
         img {
             height: 70px;
+            object-fit: contain;
         }
     }
 
@@ -15,7 +17,11 @@ header {
         position: relative;
 
         input {
+            background-color: $white;
             border-radius: 5px;
+            &:focus {
+                box-shadow: unset;
+            }
         }
 
         button {
@@ -36,8 +42,6 @@ header {
         }
 
         &-result-list {
-            width: calc(100% - 1px) !important;
-            margin-left: 1px;
             cursor: pointer;
             a {
                 color: $black !important;
@@ -70,15 +74,16 @@ header {
         p {
             position: absolute;
             top: -8px;
-            right: -16px;
+            right: -12px;
             width: 20px;
             height: 20px;
             color:#fff;
-            background-color: red;
+            background-color: $primary;
             font-size: 14px;
             line-height: 20px;
             text-align: center;            
             border-radius: 50%;
+            margin-bottom: 0;
         }
     }
 }

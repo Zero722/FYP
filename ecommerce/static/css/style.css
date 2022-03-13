@@ -10,12 +10,128 @@ h1, h2, h3, h4, h5, h6 {
   color: #4d4d4d;
 }
 
+header {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  background-color: #fff;
+  padding: 15px 0;
+  -webkit-box-shadow: 0 0 4px #ccc;
+          box-shadow: 0 0 4px #ccc;
+}
+
+header .logo img {
+  height: 70px;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+
+header .autocomplete {
+  position: relative;
+}
+
+header .autocomplete input {
+  background-color: #fff;
+  border-radius: 5px;
+}
+
+header .autocomplete input:focus {
+  -webkit-box-shadow: unset;
+          box-shadow: unset;
+}
+
+header .autocomplete button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  background-color: #0e8ce4;
+  color: #fff;
+  font-weight: 500;
+  border: 0;
+  border-radius: 0 5px 5px 0;
+  padding: 0 20px;
+  -webkit-transition: 250ms ease-in;
+  transition: 250ms ease-in;
+}
+
+header .autocomplete button:hover {
+  background-color: #0d7dcc;
+}
+
+header .autocomplete-result-list {
+  cursor: pointer;
+}
+
+header .autocomplete-result-list a {
+  color: #000 !important;
+}
+
+header .autocomplete-result-list a:hover {
+  color: #0e8ce4 !important;
+  text-decoration: none !important;
+}
+
+header .autocomplete-result-list a li {
+  cursor: pointer;
+}
+
+header .autocomplete-result-list a img {
+  height: 60px;
+  width: 70px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  margin-right: 8px;
+}
+
+header .cart {
+  position: relative;
+}
+
+header .cart img {
+  height: 35px;
+  display: inline-block;
+  margin-left: 15px;
+}
+
+header .cart p {
+  position: absolute;
+  top: -8px;
+  right: -12px;
+  width: 20px;
+  height: 20px;
+  color: #fff;
+  background-color: #0e8ce4;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  border-radius: 50%;
+  margin-bottom: 0;
+}
+
+.banner {
+  height: 300px;
+  padding: 60px 0;
+}
+
+.banner h1 {
+  color: #fff;
+  font-size: 40px;
+}
+
+@media (min-width: 768px) {
+  .banner h1 {
+    font-size: 50px;
+  }
+}
+
 .box-element {
   -webkit-box-shadow: #cccccc 0 0 16px;
           box-shadow: #cccccc 0 0 16px;
   background-color: #fff;
   border-radius: 4px;
-  padding: 10px;
+  padding: 20px;
 }
 
 .thumbnail {
@@ -29,10 +145,6 @@ h1, h2, h3, h4, h5, h6 {
 
 .product {
   border-radius: 0 0 4px 4px;
-}
-
-.btn {
-  border-radius: 0;
 }
 
 .row-image {
@@ -79,113 +191,6 @@ h1, h2, h3, h4, h5, h6 {
 
 .hidden {
   display: none !important;
-}
-
-header {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0;
-  z-index: 9999;
-  background-color: #15161D;
-  padding: 15px 0;
-}
-
-header .logo img {
-  height: 70px;
-}
-
-header .autocomplete {
-  position: relative;
-}
-
-header .autocomplete input {
-  border-radius: 5px;
-}
-
-header .autocomplete button {
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 100%;
-  background-color: #D10024;
-  color: #fff;
-  font-weight: 500;
-  border: 0;
-  border-radius: 0 5px 5px 0;
-  padding: 0 20px;
-  -webkit-transition: 250ms ease-in;
-  transition: 250ms ease-in;
-}
-
-header .autocomplete button:hover {
-  background-color: #b80020;
-}
-
-header .autocomplete-result-list {
-  width: calc(100% - 1px) !important;
-  margin-left: 1px;
-  cursor: pointer;
-}
-
-header .autocomplete-result-list a {
-  color: #000 !important;
-}
-
-header .autocomplete-result-list a:hover {
-  color: #D10024 !important;
-  text-decoration: none !important;
-}
-
-header .autocomplete-result-list a li {
-  cursor: pointer;
-}
-
-header .autocomplete-result-list a img {
-  height: 60px;
-  width: 70px;
-  -o-object-fit: cover;
-     object-fit: cover;
-  margin-right: 8px;
-}
-
-header .cart {
-  position: relative;
-}
-
-header .cart img {
-  height: 35px;
-  display: inline-block;
-  margin-left: 15px;
-}
-
-header .cart p {
-  position: absolute;
-  top: -8px;
-  right: -16px;
-  width: 20px;
-  height: 20px;
-  color: #fff;
-  background-color: red;
-  font-size: 14px;
-  line-height: 20px;
-  text-align: center;
-  border-radius: 50%;
-}
-
-.banner {
-  height: 300px;
-  padding: 60px 0;
-}
-
-.banner h1 {
-  color: #fff;
-  font-size: 40px;
-}
-
-@media (min-width: 768px) {
-  .banner h1 {
-    font-size: 50px;
-  }
 }
 
 .product-details {

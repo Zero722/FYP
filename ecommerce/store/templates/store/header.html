@@ -154,7 +154,7 @@
                 <div class="row align-items-center">
                     <div class="col-6 col-lg-3 order-1">
                         <a href="{% url 'store' %}" class="logo mr-5">
-                            <img src="{% static 'images/logo.webp' %}" />
+                            <img src="{% static 'images/logo-1.png' %}" />
                         </a>
                     </div>
                     <div class="col-lg-6 order-3 order-lg-2">   
@@ -167,16 +167,23 @@
                         </form>                     
                     </div>
                     <div class="col-6 col-lg-3 order-2 order-lg-3">
-                        <div class="header-right d-flex justify-content-end">
-                                {% if request.user.is_authenticated %}
-                                <a href="{% url 'wishlist' %}" class="btn btn-warning btn-dark mr-2">Wishlist</a>
-                                <a href="{% url 'logout' %}" class="btn btn-warning btn-dark">Logout</a>
+                        <div class="header-right d-flex align-items-center justify-content-end">
+                            {% if request.user.is_authenticated %}
+                                <div class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fa fa-user mr-2"></i>{{request.user}}
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="{% url 'wishlist' %">Wishlist</a>
+                                        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                                    </div>
+                                </div>
                             {% else %}
                                 <a href="{% url 'login' %}" class="btn btn-warning btn-dark">Login</a>
                             {% endif %}
                             <div class="cart">
                                 <a href="{% url 'cart' %}">
-                                    <img src="{% static 'images/cart.jpg' %}" />
+                                    <img src="{% static 'images/cart.png' %}" />
                                 </a>
                                 <p>{{totalCartItems}}</p>
                             </div>          
@@ -299,6 +306,12 @@
             }
         </script>
         <!-- For Product details page end -->
-        
+
+        <script>
+            $(document).ready(function(){
+                console.log("ready");
+            });
+        </script>
+
     </body>
 </html>
