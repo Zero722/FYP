@@ -22,10 +22,9 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 {% endblock header %} {% block content %}
 
-<main>
-    <section class="py-5">
+    <section>
         <div class="container">
-            <h2 class="h2 text-center mb-5">Payment</h2>
+            <h2 class="h2 text-center mb-5">Payment<hr></h2>
             <div class="row">
                 {% include "store/order_snippet.html" %}
     
@@ -112,6 +111,5 @@
             checkout.show({amount: {{order.get_total}}*100 });
         }
     </script>
-</main>
 
 {% endblock content %}

@@ -1,25 +1,27 @@
 {% extends 'store/header.html' %}
 {% load static %}
 {% block content %}
-<center><h1>Wishlist:</h1></center>
 
-	<div class="container py-5">
-		<div class="row">
-			{% for product in products %}
-			<div class="col-md-6 col-lg-4 mb-4">
-				<img class="thumbnail" src="{{product.imageURL}}">
-				<div class="box-element product">
-					<h6><strong>{{product.name}}</strong></h6>
-					<hr>
-	
-					<a href= "{% url 'add_to_cart' product.id %}" class="btn btn-outline-secondary add-btn">Add to Cart</a>
-					<a class="btn btn-outline-success" href = "{% url 'details' product.id %}">View</a>
-					<h4 style="display: inline-block; float: right"><strong>${{product.price|floatformat:2}}</strong></h4>
-	
+	<section class="product-list">
+		<div class="container">
+			<h1 class="text-center mb-5">Wishlist<hr></h1>
+			<div class="row">
+				{% for product in products %}
+				<div class="col-md-6 col-lg-4 col-xl-3 product-block">
+					<div class="product-wrap">
+						<img class="thumbnail" src="{{product.imageURL}}">
+						<div class="box-element">
+							<h6><strong>{{product.name}}</strong></h6>
+							<hr>
+							<h4 class="mb-3"><strong>${{product.price|floatformat:2}}</strong></h4>
+							<a href= "{% url 'add_to_cart' product.id %}" class="btn btn-primary add-btn">Add to Cart</a>
+							<a class="btn btn-outline-primary" href = "{% url 'details' product.id %}">View</a>					
+						</div>
+					</div>				
 				</div>
+				{% endfor %}
 			</div>
-			{% endfor %}
 		</div>
-	</div>
+	</section>
 
 {% endblock content %}

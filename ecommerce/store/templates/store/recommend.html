@@ -8,25 +8,29 @@
 </head>
 <body>
     
-    <div class="container py-5">
-        <h2 class="text-center mb-4">Recommendations</h2>
-        <div class="row">
-            {% if product_list %}
-                {% for product in product_list|slice:":4" %}
-                <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
-                    <img class="thumbnail" src="{{product.imageURL}}">
-                    <div class="box-element product">
-                        <h6><strong>{{product.name}}</strong></h6>
-                        <hr>
-                        <h4 class="mb-3"><strong>${{product.price|floatformat:2}}</strong></h4>
-                        <a href= "{% url 'add_to_cart' product.id %}" class="btn btn-outline-secondary add-btn">Add to Cart</a>
-                        <a class="btn btn-outline-success" href = "{% url 'details' product.id %}">View</a>	            
+    <section class="product-list pb-0">
+        <div class="container">
+            <h2 class="text-center mb-5">Recommendations<hr></h2>
+            <div class="row">
+                {% if product_list %}
+                    {% for product in product_list|slice:":4" %}
+                    <div class="col-md-6 col-lg-4 col-xl-3 product-block">
+                        <div class="product-wrap">
+                            <img class="thumbnail" src="{{product.imageURL}}">
+                            <div class="box-element">
+                                <h6><strong>{{product.name}}</strong></h6>
+                                <hr>
+                                <h4 class="mb-3"><strong>${{product.price|floatformat:2}}</strong></h4>
+                                <a href= "{% url 'add_to_cart' product.id %}" class="btn btn-primary add-btn">Add to Cart</a>
+                                <a class="btn btn-outline-primary" href = "{% url 'details' product.id %}">View</a>					
+                            </div>
+                        </div>				
                     </div>
-                </div>
-                {% endfor %}
-            {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
         </div>
-    </div>
+    </section>
     
     {% block content %} 
     {% endblock content %}

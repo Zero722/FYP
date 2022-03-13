@@ -1,9 +1,13 @@
 footer {
-    background-color: #1e1f29;
-    padding: 30px 0;
+    position: absolute;
+    bottom: 0;
+    height: 64px;
+    width: 100%;
+    background-color: #fafafa;
+    padding: 20px 0;
 
     p {
-        color: $white;
+        color: rgba(0,0,0,.6);
         margin-bottom: 0;
     }
 }

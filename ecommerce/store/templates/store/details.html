@@ -32,9 +32,8 @@
                             {% comment %} <input type="number" value="1" min="1"> {% endcomment %}
                             <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary">Add to cart</a>
                         </div>
+
                     	{% if request.user.is_authenticated %}
-
-
                             <form class="form-horizontal mb-3" role="search" method="post">
                                 {% csrf_token %}
                                 <div class="star-rating">
@@ -65,10 +64,7 @@
                                 </div>
                                 <input type="submit" class="btn btn-primary" value="Submit">
                             </form>
-
-                        {% endif %}
-                                
-                        
+                        {% endif %}                               
                     
                         <h3>Product description:</h3>
                         <p>{{product.description}}</p>

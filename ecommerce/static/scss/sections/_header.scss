@@ -4,7 +4,7 @@ header {
     z-index: 9999;
     background-color: $white;
     padding: 15px 0;
-    box-shadow: 0 0 4px #ccc;
+    box-shadow: 0 0 20px #e5e5e5;
 
     .logo {
         img {
@@ -17,6 +17,7 @@ header {
         position: relative;
 
         input {
+            height: 48px;
             background-color: $white;
             border-radius: 5px;
             &:focus {
@@ -67,8 +68,6 @@ header {
         position: relative;    
         img {
             height:35px;
-            display: inline-block;
-            margin-left: 15px;
         }
 
         p {
