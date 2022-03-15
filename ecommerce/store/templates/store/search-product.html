@@ -2,10 +2,26 @@
 {% load static %}
 {% block content %}
 
+Search Results For: '{{products.query}}'
+<br>
+<b>Sort by:- </b>
+<a href="{% url 'search_results' %}?search={{products.query}}&sort_by=rel">Relevance</a> | 
+<a href="{% url 'search_results' %}?search={{products.query}}&sort_by=l2h">Price (Low to High)</a> | 
+<a href="{% url 'search_results' %}?search={{products.query}}&sort_by=h2l">Price(High to Low)</a>
+
+{% comment %} <form action="{% url 'search_results' %}?search={{products.query}}&sort_by=l2h" method="GET">
+	<select onchange="this.form.submit()">
+		<option >Relevance</option>
+		<option >Price:--low to high</option>
+		<option >Price:-- high to low</option>
+	</select>
+</form> {% endcomment %}
+
+
 	<section class="product-list">
 		<div class="container">
 			<div class="row">
-				{% for product in products.starts %}
+				{% for product in products.search_results %}
 				<div class="col-md-6 col-lg-4 col-xl-3 product-block">
 					<div class="product-wrap">
 						<img class="thumbnail" src="{{product.imageURL}}">
@@ -20,20 +36,6 @@
 				</div>
 				{% endfor %}
 				
-				{% for product in products.contain %}
-				<div class="col-md-6 col-lg-4 col-xl-3 product-block">
-					<div class="product-wrap">
-						<img class="thumbnail" src="{{product.imageURL}}">
-						<div class="box-element">
-							<h6><strong>{{product.name}}</strong></h6>
-							<hr>
-							<h4 class="mb-3"><strong>${{product.price|floatformat:2}}</strong></h4>
-							<a href= "{% url 'add_to_cart' product.id %}" class="btn btn-primary add-btn">Add to Cart</a>
-							<a class="btn btn-outline-primary" href = "{% url 'details' product.id %}">View</a>					
-						</div>
-					</div>				
-				</div>
-				{% endfor %}
 				
 			</div>
 		</div>

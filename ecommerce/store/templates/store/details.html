@@ -27,6 +27,12 @@
                     <div class="product-details-description">
                         <h2 class="mb-4">{{product}}</h2>
                         <h3 class="mb-4">${{product.price}}</h3>
+                        {% if available == "yes" %}
+                            <small>In Stock</small>
+                        {% else %}
+                            <small>Out of Stock</small>
+                        {% endif %}
+                            
                         <div class="add-cart d-flex align-items-center mb-4">
                             {% comment %} <span>Quantity:</span> {% endcomment %}
                             {% comment %} <input type="number" value="1" min="1"> {% endcomment %}

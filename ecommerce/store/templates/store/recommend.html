@@ -12,8 +12,8 @@
         <div class="container">
             <h2 class="text-center mb-5">Recommendations<hr></h2>
             <div class="row">
-                {% if product_list %}
-                    {% for product in product_list|slice:":4" %}
+                {% if rec_products %}
+                    {% for product in rec_products|slice:":4" %}
                     <div class="col-md-6 col-lg-4 col-xl-3 product-block">
                         <div class="product-wrap">
                             <img class="thumbnail" src="{{product.imageURL}}">
