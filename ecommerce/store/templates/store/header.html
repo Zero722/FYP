@@ -27,7 +27,6 @@
             type="text/css"
             href="{% static 'css/style.css' %}"
         />
-        <link rel="stylesheet" type="text/css" href="{% static 'css/payment_alert.css' %}">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.3.0/css/lightgallery-bundle.min.css" integrity="sha512-fqfjVCJd1qT62UGUU3+8ByzjvSv6O9vM1muZ/cH5KrX6OqaUe2OTYjmT3R8pp6qYmh4Nv2l5I8WohRwDNzdriw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
         <script type="text/javascript">
@@ -220,15 +219,8 @@
 
         <script language="Javascript">
             var login_url = "{% url 'login' %}";
-         </script>
+        </script>
 
-
-        <!-- For Product details page -->
-        <script type="text/javascript" src="{%static 'recommend/js/jquery.min.js'%}">
-	    </script>
-
-	    <script type="text/javascript" src="{%static 'recommend/js/bootstrap.min.js'%}">
-	    </script>
         <script type="text/javascript">
         var $star_rating = $('.star-rating .fa');
     
