@@ -2,8 +2,8 @@
 
     .container {
         background-color: #fff;
-        padding-top: 30px;
-        padding-bottom: 30px;
+        padding-top: 40px;
+        padding-bottom: 40px;
         border-radius: 5px;
         box-shadow: 0 0 20px #e5e5e5;
     }
@@ -17,18 +17,25 @@
 
     &-description {
         .add-cart {
+            flex-wrap: wrap;
+            gap: 16px;
+
             span {
                 text-transform: uppercase;
                 font-weight: 700;
                 margin-right: 32px;
             }
-            input {
-                height: 30px;
-                width: 50px;
-                text-align: center;
-            }
             button {
                 margin-left: 8px;
+            }
+        }
+
+        .star-rating {
+            line-height:32px;
+            font-size:1.25em;
+
+            .fa-star {
+                color: #ffb400;
             }
         }
     }
