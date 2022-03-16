@@ -1,4 +1,4 @@
-from decimal import Decimal
+from tkinter.messagebox import YES
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse, Http404
 from django.views.generic import ListView, View
@@ -16,9 +16,9 @@ import requests
 import pandas as pd
 from django.db.models import Case, When
 
-
+from itertools import chain
 import json
-import datetime
+from django.core.paginator import Paginator
 
 from .models import *
 
@@ -96,59 +96,29 @@ def store(request):
 
     products = Product.objects.all()
     context = {"products": products}
+    paginator = Paginator(products, 8) # Show 8 products per page.
+
+    page_number = request.GET.get('page')
+    all_products = paginator.get_page(page_number)
 
     if request.user.is_authenticated:
-        product_rating = pd.DataFrame(list(Myrating.objects.all().values()))
-        print(product_rating)
-        new_user = product_rating.user_id.unique().shape[0]
         current_user_id = request.user.id
-        # if new user not rated any product
-        if current_user_id > new_user:
-            product = Product.objects.get(id=19)
-            q = Myrating(user=request.user, product=product, rating=0)
-            q.save()
-        userRatings = product_rating.pivot_table(
-            index=["user_id"], columns=["product_id"], values="rating"
-        )
-        userRatings = userRatings.fillna(0, axis=1)
-        corrMatrix = userRatings.corr(method="pearson")
-
-        user = pd.DataFrame(
-            list(Myrating.objects.filter(user=request.user).values())
-        ).drop(["user_id", "id"], axis=1)
-        user_filtered = [tuple(x) for x in user.values]
-        product_id_watched = [each[0] for each in user_filtered]
-
-        similar_products = pd.DataFrame()
-        for product, rating in user_filtered:
-            similar_products = similar_products.append(
-                get_similar(product, rating, corrMatrix), ignore_index=True
-            )
-
-        products_id = list(similar_products.sum().sort_values(ascending=False).index)
-        products_id_recommend = [
-            each for each in products_id if each not in product_id_watched
-        ]
-        preserved = Case(
-            *[When(pk=pk, then=pos) for pos, pk in enumerate(products_id_recommend)]
-        )
-        product_list = list(
-            Product.objects.filter(id__in=products_id_recommend).order_by(preserved)[
-                :10
-            ]
-        )
-
-        print("product=", product_list)
-        context = {"product_list": product_list, "products": products}
+        user=request.user
+        rec_products = recommendation(current_user_id, user)
+        context = {'rec_products':rec_products, 'all_products':all_products}
         return render(request, "store/store.html", context)
 
-    context = {"products": products}
+    context = {"all_products": all_products}
     return render(request, "store/store.html", context)
 
 
 def details(request, product_id):
     try:
         product = Product.objects.get(pk=product_id)
+        if product.status == True:
+            available = 'yes'
+        else:
+            available = 'no'
 
         if request.user.is_authenticated:
             user = get_object_or_404(Customer, user=request.user)
@@ -218,34 +188,15 @@ def details(request, product_id):
                 "product_rating": product_rating,
                 "rate_flag": rate_flag,
                 "update": update,
+                "available": available,
             }
             return render(request, "store/details.html", context)
 
     except:
         raise Http404("Product does not exist")
 
-    context = {"product": product}
+    context = {"product": product, "available": available,}
     return render(request, "store/details.html", context)
-
-
-# Search
-def get_products(request):
-    search = request.GET.get("search")
-    payload = []
-    if search:
-        # objs = Product.objects.filter(Q(name__icontains = search)|Q(name__startswith = search))
-        # objs = Product.objects.filter(name__icontains = search)
-        objs = Product.objects.filter(name__startswith=search)
-        ob = Product.objects.filter(name__icontains=search)
-
-        for obj in objs:
-            payload.append({"id": obj.pk, "imgurl": obj.imageURL, "name": obj.name})
-
-        for obj in ob:
-            if obj not in objs:
-                payload.append({"id": obj.pk, "imgurl": obj.imageURL, "name": obj.name})
-
-    return JsonResponse({"status": True, "payload": payload})
 
 
 @login_required(login_url="login")
@@ -260,7 +211,6 @@ def cart(request):
         messages.warning(request, "You do not have an active order")
         context = {}
         return render(request, "store/cart.html", context)
-
 
 
 class CheckoutView(LoginRequiredMixin, View):
@@ -323,14 +273,22 @@ class SearchResultsView(ListView):
 
     def get_queryset(self):
         query = self.request.GET.get("search")
-        product_starts = Product.objects.filter(name__startswith=query)
-        product_contain = Product.objects.filter(
-            Q(name__icontains=query), ~Q(name__startswith=query)
-        )
-        products = {"starts": product_starts, "contain": product_contain}
+        product_starts = Product.objects.filter(name__startswith=query).order_by("name") 
+        product_contain = Product.objects.filter(Q(name__icontains=query), ~Q(name__startswith=query)).order_by("name")
+        result_list = list(chain(product_starts, product_contain))
+        products = {"search_results": result_list, "query": query}
+
+        sort_by = self.request.GET.get("sort_by") 
+        if sort_by == "l2h":
+            product_contain = Product.objects.filter(Q(name__icontains=query)).order_by("price", "name") 
+            products = {"search_results": product_contain, "query": query}
+
+        if sort_by == "h2l":
+            product_contain = Product.objects.filter(Q(name__icontains=query)).order_by("-price", "name")
+            products = {"search_results": product_contain, "query": query}
 
         return products
-
+    
 
 @login_required(login_url="login")
 def add_to_cart(request, id):
@@ -454,6 +412,73 @@ def wishlist(request):
         return render(request, "store/watch.html", {"products": products})
 
     return render(request, "store/wishlist.html", {"products": products})
+
+
+# Search
+def get_products(request):
+    search = request.GET.get("search")
+    payload = []
+    if search:
+        # objs = Product.objects.filter(Q(name__icontains = search)|Q(name__startswith = search))
+        # objs = Product.objects.filter(name__icontains = search)
+        objs = Product.objects.filter(name__startswith=search)
+        ob = Product.objects.filter(name__icontains=search)
+
+        for obj in objs:
+            payload.append({"id": obj.pk, "imgurl": obj.imageURL, "name": obj.name})
+
+        for obj in ob:
+            if obj not in objs:
+                payload.append({"id": obj.pk, "imgurl": obj.imageURL, "name": obj.name})
+
+    return JsonResponse({"status": True, "payload": payload})
+
+
+# For recommending products in front page
+def recommendation(current_user_id, user):
+    product_rating = pd.DataFrame(list(Myrating.objects.all().values()))
+    print(product_rating)
+    new_user = product_rating.user_id.unique().shape[0]
+    # current_user_id = request.user.id
+
+    # if new user not rated any product
+    if current_user_id > new_user:
+        product = Product.objects.get(id=19)
+        q = Myrating(user=user, product=product, rating=0)
+        q.save()
+    userRatings = product_rating.pivot_table(
+        index=["user_id"], columns=["product_id"], values="rating"
+    )
+    userRatings = userRatings.fillna(0, axis=1)
+    corrMatrix = userRatings.corr(method="pearson")
+
+    user = pd.DataFrame(
+        list(Myrating.objects.filter(user=user).values())
+    ).drop(["user_id", "id"], axis=1)
+    user_filtered = [tuple(x) for x in user.values]
+    product_id_watched = [each[0] for each in user_filtered]
+
+    similar_products = pd.DataFrame()
+    for product, rating in user_filtered:
+        similar_products = similar_products.append(
+            get_similar(product, rating, corrMatrix), ignore_index=True
+        )
+
+    products_id = list(similar_products.sum().sort_values(ascending=False).index)
+    products_id_recommend = [
+        each for each in products_id if each not in product_id_watched
+    ]
+    preserved = Case(
+        *[When(pk=pk, then=pos) for pos, pk in enumerate(products_id_recommend)]
+    )
+    product_list = list(
+        Product.objects.filter(id__in=products_id_recommend).order_by(preserved)[
+            :10
+        ]
+    )
+
+
+    return product_list
 
 
 # To get similar products based on user rating
