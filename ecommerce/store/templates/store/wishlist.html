@@ -5,7 +5,7 @@
 	<section class="product-list">
 		<div class="container">
 			<h1 class="text-center mb-5">Wishlist<hr></h1>
-			<div class="row">
+			<!-- <div class="row">
 				{% for product in products %}
 				<div class="col-md-6 col-lg-4 col-xl-3 product-block">
 					<div class="product-wrap">
@@ -20,6 +20,34 @@
 					</div>				
 				</div>
 				{% endfor %}
+			</div> -->
+			<div class="box-element">
+				<div class="cart-row">
+					<div style="flex:2"></div>
+					<div style="flex:2"><strong>Item</strong></div>
+					<div style="flex:1"><strong>Price</strong></div>
+					<div style="flex:1"><strong>Quantity</strong></div>
+					<div style="flex:1"><strong>Total</strong></div>
+				</div>
+				
+				{% for item in object.items.all %}
+				<div class="cart-row">
+					<div style="flex:2"><img class="row-image" src="{{item.product.imageURL}}"></div>
+					<div style="flex:2"><p>{{item.product.name}}</p></div>
+					<div style="flex:1"><p>${{item.product.price|floatformat:2}}</p></div>
+					<div style="flex:1">
+						<p class="quantity">{{item.quantity}}</p>
+						<div class="quantity">
+							<a href="{% url 'add_to_cart' item.product.id %}"><img class="chg-quantity" src="{% static  'images/arrow-up.png' %}"></a>
+					
+							<a href="{% url 'remove_from_cart' item.product.id %}"><img class="chg-quantity" src="{% static  'images/arrow-down.png' %}"></a>
+
+						</div>
+					</div>
+					<div style="flex:1"><p>${{item.get_total_item_price}}</p></div>							
+				</div>
+				{% endfor %}					
+
 			</div>
 		</div>
 	</section>

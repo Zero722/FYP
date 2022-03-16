@@ -28,6 +28,7 @@
             href="{% static 'css/style.css' %}"
         />
         <link rel="stylesheet" type="text/css" href="{% static 'css/payment_alert.css' %}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.3.0/css/lightgallery-bundle.min.css" integrity="sha512-fqfjVCJd1qT62UGUU3+8ByzjvSv6O9vM1muZ/cH5KrX6OqaUe2OTYjmT3R8pp6qYmh4Nv2l5I8WohRwDNzdriw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
         <script type="text/javascript">
             var user = "{{request.user}}";
@@ -214,6 +215,9 @@
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
             crossorigin="anonymous"
         ></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.3.0/lightgallery.min.js" integrity="sha512-+1CyleTPoFvPO15/CfBZ5h6k/mu/qCQe9uxq1tEfO7SRJ52MnCAQ561bAYkvrsGtnG7AkcvKtVwdeoZc8ps7bQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
         <script language="Javascript">
             var login_url = "{% url 'login' %}";
          </script>
@@ -260,5 +264,16 @@
         </script>
         <!-- For Product details page end -->
 
+        <script>
+            jQuery(document).ready(function($) {
+                lightGallery(document.getElementById('product-details'), {
+                    selector: '.gallery-item',
+                    counter: false,
+                    mobileSettings: {
+                        showCloseIcon: true,
+                    }
+                });
+            });
+        </script>
     </body>
 </html>

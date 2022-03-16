@@ -1,3 +1,4 @@
+@import url("http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css");
 .btn {
   transition: 250ms ease-in;
 }
@@ -63,7 +64,7 @@ header {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
-  z-index: 9999;
+  z-index: 999;
   background-color: #fff;
   padding: 15px 0;
   box-shadow: 0 0 20px #e5e5e5;
@@ -248,6 +249,39 @@ section.product-list .row {
 }
 .product-details-description .star-rating .fa-star {
   color: #ffb400;
+}
+
+#box {
+  width: 500px;
+  overflow: hidden;
+  background: #f1f1f1;
+  box-shadow: 0 0 20px black;
+  border-radius: 8px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  padding: 10px;
+  text-align: center;
+  display: none;
+}
+
+#box span {
+  color: #0e8ce4;
+  font-size: 40px;
+  display: block;
+  margin: 20px 0;
+}
+
+.close {
+  font-size: 18px;
+  color: white;
+  padding: 10px 30px;
+  cursor: pointer;
+  background: #0e8ce4;
+  display: inline-block;
+  border-radius: 4px;
 }
 
 footer {
