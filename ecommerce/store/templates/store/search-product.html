@@ -16,9 +16,9 @@
 				<h1 class="mb-4">Search Results For: '{{products.query}}'<hr></h1>
 				<b>Sort by: </b>
 				<select onchange="location = this.value;">
-					<option value="{% url 'search_results' %}?search={{products.query}}&sort_by=rel">Relevance</option>
-					<option value="{% url 'search_results' %}?search={{products.query}}&sort_by=l2h">Price (Low to High)</option>
-					<option value="{% url 'search_results' %}?search={{products.query}}&sort_by=h2l">Price(High to Low)</option>
+					<option value="{% url 'search_results' %}?search={{products.query}}&sort_by=rel" {% if products.sortby == 'rel' %} selected{% endif %}>Relevance</option>
+					<option value="{% url 'search_results' %}?search={{products.query}}&sort_by=l2h" {% if products.sortby == 'l2h' %} selected{% endif %}>Price (Low to High)</option>
+					<option value="{% url 'search_results' %}?search={{products.query}}&sort_by=h2l" {% if products.sortby == 'h2l' %} selected{% endif %}>Price(High to Low)</option>
 				</select>
 			</div>			
 			<div class="row">
