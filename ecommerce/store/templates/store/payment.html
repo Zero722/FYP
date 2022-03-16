@@ -52,9 +52,21 @@
                 </div>                                
             </div>
         </div>
+
+        <div id="box">
+        <span class="ion-checkmark-round"></span>
+        <h1>Payment Successful!</h1>
+        <a onclick="unpop()" class="close">Close</a>
+        </div>
     </section>
-    
+   
     <script>
+        function pop(){
+                document.getElementById("box").style.display="block";
+        }
+        function unpop(){
+            document.getElementById("box").style.display="none";
+        }
         $(document).ready(function() {
             console.log($.ajax);
           });
@@ -84,8 +96,7 @@
                         dataType: 'json',
                         success: function(response) {
                             console.log(response);
-                            window.location.href = "{% url 'store' %}";
-                            console.log("123456");
+                            pop();
                         },
                         error: function(error) {
                             console.log("654321");
