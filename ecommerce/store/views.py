@@ -405,11 +405,14 @@ def verify_payment(request):
 @login_required(login_url="login")
 def wishlist(request):
     products = Product.objects.filter(mylist__watch=True, mylist__user=request.user)
-    query = request.GET.get("q")
 
-    if query:
-        products = Product.objects.filter(Q(title__icontains=query)).distinct()
-        return render(request, "store/watch.html", {"products": products})
+    if request.method == "POST":
+        MyList.objects.all().filter(product_id=19, user=request.user).update(watch=False)
+    # query = request.GET.get("q")
+
+    # if query:
+    #     products = Product.objects.filter(Q(title__icontains=query)).distinct()
+    #     return render(request, "store/watch.html", {"products": products})
 
     return render(request, "store/wishlist.html", {"products": products})
 

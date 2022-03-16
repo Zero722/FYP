@@ -41,7 +41,16 @@
 
 						</div>
 					</div>
-					<div style="flex:1"><a href="" class="btn btn-outline-primary">Remove from Wishlist</a></div>							
+					<div style="flex:1">
+					
+							<form class="form-horizontal" role="search" method="post">
+								{% csrf_token %}
+								{% if update %}
+								<input type="submit" class="btn btn-outline-primary" value="Remove from Wishlist"  name="watch">
+								{% endif %}
+							</form>
+					
+					</div>							
 				</div>
 				{% endfor %}					
 
