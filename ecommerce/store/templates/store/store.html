@@ -19,7 +19,7 @@
 							<h6><strong>{{product.name}}</strong></h6>
 							<hr>
 							<h4 class="mb-3"><strong>${{product.price|floatformat:2}}</strong></h4>
-							<a href= "{% url 'add_to_cart' product.id %}" class="btn btn-primary add-btn">Add to Cart</a>
+							<a href= "{% url 'add_to_cart' %}" class="btn btn-primary add-btn" id="{{product.id}}">Add to Cart</a>
 							<a class="btn btn-outline-primary" href = "{% url 'details' product.id %}">View</a>					
 						</div>
 					</div>				
@@ -45,5 +45,10 @@
 			</div>
 		</div>
 	</section>
+	
+
 
 {% endblock content %}
+{% block script %}
+
+{% endblock script %}

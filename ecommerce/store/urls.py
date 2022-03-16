@@ -10,13 +10,18 @@ urlpatterns = [
     path("search/", SearchResultsView.as_view(), name="search_results"),
     path("product/<int:product_id>/", views.details, name="details"),
     path("get-products/", views.get_products, name="getproducts"),
+    path('wishlist/', views.wishlist, name='wishlist'),
+
     path("login/", views.custom_login, name="login"),
     path("logout/", views.logoutUser, name="logout"),
     path("register/", views.registerUser, name="register"),
-    path("add_to_cart/<int:id>/", views.add_to_cart, name="add_to_cart"),
-    path("remove_from_cart/<int:id>/", views.remove_from_cart, name="remove_from_cart"),
+
+    path("add_to_cart/", views.add_to_cart, name="add_to_cart"),
+    path("remove_from_cart/", views.remove_from_cart, name="remove_from_cart"),
+    path("remove_from_wishlist/<int:id>/", views.remove_from_wishlist, name="remove_from_wishlist"),
+
     # payment url
     path("api/verify_payment", verify_payment, name="verify_payment"),
-    path('wishlist/', views.wishlist, name='wishlist'),
+    
 
 ]

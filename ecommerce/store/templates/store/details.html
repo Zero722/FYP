@@ -38,7 +38,9 @@
                         <div class="add-cart d-flex align-items-center mt-2">
                             {% comment %} <span>Quantity:</span> {% endcomment %}
                             {% comment %} <input type="number" value="1" min="1"> {% endcomment %}
-                            <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary">Add to Cart</a>
+							<a href= "{% url 'add_to_cart' %}" class="btn btn-primary add-btn" id="{{product.id}}">Add to Cart</a>
+
+                           
                             {% if request.user.is_authenticated %}
                                 <form class="form-horizontal" role="search" method="post">
                                     {% csrf_token %}

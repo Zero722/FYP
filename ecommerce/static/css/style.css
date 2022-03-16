@@ -31,6 +31,10 @@ h6 {
   color: #4d4d4d;
 }
 
+body {
+  background-color: #fbfbfb;
+}
+
 #page-container {
   position: relative;
   min-height: 100vh;
@@ -165,7 +169,7 @@ header .cart p {
   transition: 300ms ease-in-out;
 }
 .product-block .product-wrap:hover {
-  box-shadow: 0 0 20px #e5e5e5;
+  box-shadow: 0 0 20px #ccc;
 }
 .product-block .product-wrap .box-element {
   background-color: #fff;
@@ -191,10 +195,13 @@ section.product-list .row {
 
 .cart-row {
   display: flex;
-  align-items: flex-stretch;
+  align-items: center;
   padding-bottom: 10px;
   margin-bottom: 10px;
   border-bottom: 1px solid #ececec;
+}
+.cart-row p {
+  margin-bottom: 0;
 }
 
 .quantity {
@@ -284,15 +291,34 @@ section.product-list .row {
   border-radius: 4px;
 }
 
+.login-register .form-wrap {
+  max-width: 450px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 10px 34px -15px rgba(0, 0, 0, 0.24);
+  margin: 40px auto;
+}
+.login-register .form-control {
+  height: 50px;
+}
+.login-register form button {
+  width: 100%;
+  background-color: #1089ff;
+  color: #fff;
+  border: 1px solid #1089ff;
+  border-radius: 5px;
+  padding: 12px 20px;
+}
+
 footer {
   position: absolute;
   bottom: 0;
   height: 64px;
   width: 100%;
-  background-color: #fafafa;
+  background-color: #222222;
   padding: 20px 0;
 }
 footer p {
-  color: rgba(0, 0, 0, 0.6);
+  color: #fff;
   margin-bottom: 0;
 }/*# sourceMappingURL=style.css.map */

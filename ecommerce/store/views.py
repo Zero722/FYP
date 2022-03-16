@@ -113,6 +113,7 @@ def store(request):
 
 
 def details(request, product_id):
+    
     try:
         product = Product.objects.get(pk=product_id)
         if product.status == True:
@@ -122,11 +123,7 @@ def details(request, product_id):
 
         if request.user.is_authenticated:
             user = get_object_or_404(Customer, user=request.user)
-            temp = list(
-                MyList.objects.all()
-                .values()
-                .filter(product_id=product_id, user=request.user)
-            )
+            temp = list(MyList.objects.all().values().filter(product_id=product_id, user=request.user))
             if temp:
                 update = temp[0]["watch"]
             else:
@@ -139,20 +136,16 @@ def details(request, product_id):
                     else:
                         update = False
 
-                    if (
-                        MyList.objects.all()
-                        .filter(product_id=product_id, user=request.user)
-                    ):
-                        MyList.objects.all().filter(
-                            product_id=product_id, user=request.user
-                        ).update(watch=update)
+                    if (MyList.objects.all().filter(product_id=product_id, user=request.user)):
+                        MyList.objects.all().filter(product_id=product_id, user=request.user).update(watch=update)
+
                     else:
                         q = MyList(user=request.user, product=product, watch=update)
                         q.save()
-                    if update:
-                        messages.success(request, "Product added to your list!")
-                    else:
-                        messages.success(request, "Product removed from your list!")
+                    # if update:
+                    #     messages.success(request, "Product added to your list!")
+                    # else:
+                    #     messages.success(request, "Product removed from your list!")
 
                 # For rating
                 else:
@@ -289,9 +282,14 @@ class SearchResultsView(ListView):
 
         return products
     
+@login_required(login_url="login")
+def remove_from_wishlist(request, id):
+    MyList.objects.all().filter(product_id=id, user=request.user).update(watch=False)
+    return redirect(request.META["HTTP_REFERER"])
 
 @login_required(login_url="login")
-def add_to_cart(request, id):
+def add_to_cart(request):
+    id = request.POST.get("id")
     product = get_object_or_404(Product, id=id)
     customer = get_object_or_404(Customer, user=request.user)
 
@@ -305,27 +303,35 @@ def add_to_cart(request, id):
         if order.items.filter(product__id=product.id).exists():
             order_item.quantity += 1
             order_item.save()
+            cartItems = order.get_cart_items
+            total_price = order.get_total
             # messages.info(request, "This item quantity was updated.")
-            return redirect(request.META["HTTP_REFERER"])
+            return JsonResponse({"cartItems":cartItems})
+            
         else:
             order.items.add(order_item)
             order_item.quantity += 1
             order_item.save()
+            cartItems = order.get_cart_items
+            total_price = order.get_total
             # messages.info(request, "This item was added to your cart.")
-            return redirect(request.META["HTTP_REFERER"])
-
+            return JsonResponse({"cartItems":cartItems})
     else:
         date_orderd = timezone.now()
         order = Order.objects.create(customer=customer, date_orderd=date_orderd)
         order.items.add(order_item)
         order_item.quantity += 1
         order_item.save()
+        cartItems = order.get_cart_items
+        total_price = order.get_total
         # messages.info(request, "This item was added to your cart.")
-        return redirect(request.META["HTTP_REFERER"])
+        return JsonResponse({"cartItems":cartItems})
+
 
 
 @login_required(login_url="login")
-def remove_from_cart(request, id):
+def remove_from_cart(request):
+    id = request.POST.get("id")
     customer = get_object_or_404(Customer, user=request.user)
     product = get_object_or_404(Product, id=id)
     order_qs = Order.objects.filter(customer=customer, ordered=False)
@@ -333,9 +339,7 @@ def remove_from_cart(request, id):
         order = order_qs[0]
         # check if the order item is in the order
         if order.items.filter(product__id=product.id).exists():
-            order_item = OrderItem.objects.filter(
-                product=product, customer=customer, ordered=False
-            )[0]
+            order_item = OrderItem.objects.filter(product=product, customer=customer, ordered=False)[0]
 
             order_item.quantity -= 1
             order_item.save()
@@ -344,7 +348,10 @@ def remove_from_cart(request, id):
                 order.items.remove(order_item)
                 order_item.delete()
             # messages.info(request, "This item quantity was updated.")
-            return redirect(request.META["HTTP_REFERER"])
+            cartItems = order.get_cart_items
+            total_price = order.get_total
+            return JsonResponse({"cartItems":cartItems})
+            
         else:
             # messages.info(request, "This item was not in your cart")
             return redirect(request.META["HTTP_REFERER"])
@@ -405,15 +412,6 @@ def verify_payment(request):
 @login_required(login_url="login")
 def wishlist(request):
     products = Product.objects.filter(mylist__watch=True, mylist__user=request.user)
-
-    if request.method == "POST":
-        MyList.objects.all().filter(product_id=19, user=request.user).update(watch=False)
-    # query = request.GET.get("q")
-
-    # if query:
-    #     products = Product.objects.filter(Q(title__icontains=query)).distinct()
-    #     return render(request, "store/watch.html", {"products": products})
-
     return render(request, "store/wishlist.html", {"products": products})
 
 

@@ -5,29 +5,13 @@
 	<section class="product-list">
 		<div class="container">
 			<h1 class="text-center mb-5">Wishlist<hr></h1>
-			<!-- <div class="row">
-				{% for product in products %}
-				<div class="col-md-6 col-lg-4 col-xl-3 product-block">
-					<div class="product-wrap">
-						<img class="thumbnail" src="{{product.imageURL}}">
-						<div class="box-element">
-							<h6><strong>{{product.name}}</strong></h6>
-							<hr>
-							<h4 class="mb-3"><strong>${{product.price|floatformat:2}}</strong></h4>
-							<a href= "{% url 'add_to_cart' product.id %}" class="btn btn-primary add-btn">Add to Cart</a>
-							<a class="btn btn-outline-primary" href = "{% url 'details' product.id %}">View</a>					
-						</div>
-					</div>				
-				</div>
-				{% endfor %}
-			</div> -->
 			<div class="box-element">
 				<div class="cart-row">
 					<div style="flex:2"></div>
 					<div style="flex:2"><strong>Item</strong></div>
 					<div style="flex:1"><strong>Price</strong></div>
 					<div style="flex:1"><strong></strong></div>
-					<div style="flex:1"><strong></strong></div>
+					<div style="flex:2"><strong></strong></div>
 				</div>
 				
 				{% for product in products %}
@@ -37,19 +21,12 @@
 					<div style="flex:1"><p>${{product.price|floatformat:2}}</p></div>
 					<div style="flex:1">
 						<div class="quantity">
-							<a href= "{% url 'add_to_cart' product.id %}" class="btn btn-primary add-btn">Add to Cart</a>		
+							<a href= "{% url 'add_to_cart' %}" class="btn btn-primary add-btn" id="{{product.id}}">Add to Cart</a>
 
 						</div>
 					</div>
-					<div style="flex:1">
-					
-							<form class="form-horizontal" role="search" method="post">
-								{% csrf_token %}
-								{% if update %}
-								<input type="submit" class="btn btn-outline-primary" value="Remove from Wishlist"  name="watch">
-								{% endif %}
-							</form>
-					
+					<div style="flex:2">
+						<a href= "{% url 'remove_from_wishlist' product.id %}" class="btn btn-outline-primary">Remove from Wishlist</a>
 					</div>							
 				</div>
 				{% endfor %}					

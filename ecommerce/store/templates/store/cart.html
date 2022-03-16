@@ -12,8 +12,8 @@
 						<br>
 						<table class="table">
 							<tr>
-								<th><h5>Items:<strong>{{totalCartItems}}</strong></h5></th>
-								<th><h5>Total:<strong> ${{object.get_total}}</strong></h5></th>
+								<th><h5>Items:<strong id="total_cart_items">{{totalCartItems}}</strong></h5></th>
+								<th><h5>Total:<strong id="total_price"> ${{object.get_total}}</strong></h5></th>
 								<th>
 									{% if object.get_total %}
 									<a  style="float:right; margin:5px;" class="btn btn-primary" href="{% url 'checkout' %}">Checkout</a>
@@ -33,16 +33,16 @@
 						</div>
 						
 						{% for item in object.items.all %}
-						<div class="cart-row">
+						<div class="cart-row" id="rowid{{item.product.id}}">
 							<div style="flex:2"><img class="row-image" src="{{item.product.imageURL}}"></div>
 							<div style="flex:2"><p>{{item.product.name}}</p></div>
 							<div style="flex:1"><p>${{item.product.price|floatformat:2}}</p></div>
 							<div style="flex:1">
-								<p class="quantity">{{item.quantity}}</p>
+								<p class="quantity" id="id{{item.product.id}}">{{item.quantity}}</p>
 								<div class="quantity">
-									<a href="{% url 'add_to_cart' item.product.id %}"><img class="chg-quantity" src="{% static  'images/arrow-up.png' %}"></a>
+									<a href="{% url 'add_to_cart' %}" class="add-btn" id="{{item.product.id}}"><img class="chg-quantity" src="{% static  'images/arrow-up.png' %}"></a>
 							
-									<a href="{% url 'remove_from_cart' item.product.id %}"><img class="chg-quantity" src="{% static  'images/arrow-down.png' %}"></a>
+									<a href="{% url 'remove_from_cart' %}" class="remove-btn" id="{{item.product.id}}"><img class="chg-quantity" src="{% static  'images/arrow-down.png' %}"></a>
 
 								</div>
 							</div>
@@ -56,3 +56,41 @@
 		</div>
 	</section>
 {% endblock content %}
+
+{% block script %}
+<script>
+	$( ".add-btn" ).click(function(e){
+			var id = $(this).attr('id');
+			var qid = "id"+id
+			var quantity = parseInt($("#"+qid).text())
+			quantity = quantity +1
+			if (quantity <= 0) {
+				console.log("Less")
+				$("#rowid"+id).remove()	
+			}
+			else{
+				$("#"+qid).text(quantity)
+				console.log("More")
+			}		
+		});
+
+		$( ".remove-btn" ).click(function(e){
+			var id = $(this).attr('id');
+			var qid = "id"+id
+			var quantity = parseInt($("#"+qid).text())
+			quantity = quantity - 1
+			if (quantity <= 0) {
+				console.log("Less")
+				$("#rowid"+id).remove()	
+			}
+			else{
+				$("#"+qid).text(quantity)
+				console.log("More")
+			}
+	
+		});
+</script>
+
+{% endblock script %}
+
+
