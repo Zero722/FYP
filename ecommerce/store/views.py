@@ -276,16 +276,16 @@ class SearchResultsView(ListView):
         product_starts = Product.objects.filter(name__startswith=query).order_by("name") 
         product_contain = Product.objects.filter(Q(name__icontains=query), ~Q(name__startswith=query)).order_by("name")
         result_list = list(chain(product_starts, product_contain))
-        products = {"search_results": result_list, "query": query}
+        products = {"search_results": result_list, "query": query, "sortby":"rel"}
 
         sort_by = self.request.GET.get("sort_by") 
         if sort_by == "l2h":
             product_contain = Product.objects.filter(Q(name__icontains=query)).order_by("price", "name") 
-            products = {"search_results": product_contain, "query": query}
+            products = {"search_results": product_contain, "query": query, "sortby":"l2h"}
 
         if sort_by == "h2l":
             product_contain = Product.objects.filter(Q(name__icontains=query)).order_by("-price", "name")
-            products = {"search_results": product_contain, "query": query}
+            products = {"search_results": product_contain, "query": query, "sortby":"h2l"}
 
         return products
     
