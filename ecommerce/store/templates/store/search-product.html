@@ -30,12 +30,30 @@
 							<h6><strong>{{product.name}}</strong></h6>
 							<hr>
 							<h4 class="mb-3"><strong>${{product.price|floatformat:2}}</strong></h4>
-							<a href= "{% url 'add_to_cart' product.id %}" class="btn btn-primary add-btn">Add to Cart</a>
+	
+							<a href= "{% url 'add_to_cart' %}" class="btn btn-primary add-btn" id="{{product.id}}">Add to Cart</a>
 							<a class="btn btn-outline-primary" href = "{% url 'details' product.id %}">View</a>					
 						</div>
 					</div>				
 				</div>
 				{% endfor %}			
+			</div>
+			<div class="pagination justify-content-center mt-5">
+				<span class="step-links">
+					{% if products.search_results.has_previous %}
+						<a class="btn btn-dark" href="?search={{products.query}}&sort_by={{products.sortby}}&page=1">&laquo; first</a>
+						<a class="btn btn-outline-dark" href="?search={{products.query}}&sort_by={{products.sortby}}&page={{ products.search_results.previous_page_number }}">previous</a>
+					{% endif %}
+			
+					<span class="current mx-2">
+						Page {{ products.search_results.number }} of {{ products.search_results.paginator.num_pages }}.
+					</span>
+			
+					{% if products.search_results.has_next %}
+						<a class="btn btn-outline-dark" href="?search={{products.query}}&sort_by={{products.sortby}}&page={{ products.search_results.next_page_number }}">next</a>
+						<a class="btn btn-dark" href="?search={{products.query}}&sort_by={{products.sortby}}&page={{ products.search_results.paginator.num_pages }}">last &raquo;</a>
+					{% endif %}
+				</span>
 			</div>
 		</div>
 	</section>

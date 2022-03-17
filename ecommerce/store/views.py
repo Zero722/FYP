@@ -100,6 +100,10 @@ def store(request):
 
     page_number = request.GET.get('page')
     all_products = paginator.get_page(page_number)
+    query1 = request.GET.get('query')  
+
+    print("Apple")  
+    print(query1)
 
     if request.user.is_authenticated:
         current_user_id = request.user.id
@@ -264,21 +268,31 @@ class SearchResultsView(ListView):
     template_name = "store/search-product.html"
     context_object_name = "products"
 
+
     def get_queryset(self):
         query = self.request.GET.get("search")
         product_starts = Product.objects.filter(name__startswith=query).order_by("name") 
         product_contain = Product.objects.filter(Q(name__icontains=query), ~Q(name__startswith=query)).order_by("name")
         result_list = list(chain(product_starts, product_contain))
-        products = {"search_results": result_list, "query": query, "sortby":"rel"}
+
+        paginator = Paginator(result_list, 8) # Show 8 products per page.
+        page_number = self.request.GET.get('page')
+        all_products = paginator.get_page(page_number)
+        
+        products = {"search_results": all_products, "query": query, "sortby":"rel"}
 
         sort_by = self.request.GET.get("sort_by") 
         if sort_by == "l2h":
             product_contain = Product.objects.filter(Q(name__icontains=query)).order_by("price", "name") 
-            products = {"search_results": product_contain, "query": query, "sortby":"l2h"}
+            paginator = Paginator(product_contain, 8) # Show 8 products per page.
+            all_products = paginator.get_page(page_number)
+            products = {"search_results": all_products, "query": query, "sortby":"l2h"}
 
         if sort_by == "h2l":
             product_contain = Product.objects.filter(Q(name__icontains=query)).order_by("-price", "name")
-            products = {"search_results": product_contain, "query": query, "sortby":"h2l"}
+            paginator = Paginator(product_contain, 8) # Show 8 products per page.
+            all_products = paginator.get_page(page_number)
+            products = {"search_results": all_products, "query": query, "sortby":"h2l"}
 
         return products
     
@@ -306,7 +320,7 @@ def add_to_cart(request):
             cartItems = order.get_cart_items
             total_price = order.get_total
             # messages.info(request, "This item quantity was updated.")
-            return JsonResponse({"cartItems":cartItems})
+            return JsonResponse({"cartItems":cartItems, "total_price":total_price})
             
         else:
             order.items.add(order_item)
@@ -315,7 +329,7 @@ def add_to_cart(request):
             cartItems = order.get_cart_items
             total_price = order.get_total
             # messages.info(request, "This item was added to your cart.")
-            return JsonResponse({"cartItems":cartItems})
+            return JsonResponse({"cartItems":cartItems, "total_price":total_price})
     else:
         date_orderd = timezone.now()
         order = Order.objects.create(customer=customer, date_orderd=date_orderd)
@@ -325,8 +339,7 @@ def add_to_cart(request):
         cartItems = order.get_cart_items
         total_price = order.get_total
         # messages.info(request, "This item was added to your cart.")
-        return JsonResponse({"cartItems":cartItems})
-
+        return JsonResponse({"cartItems":cartItems, "total_price":total_price})
 
 
 @login_required(login_url="login")
@@ -350,7 +363,7 @@ def remove_from_cart(request):
             # messages.info(request, "This item quantity was updated.")
             cartItems = order.get_cart_items
             total_price = order.get_total
-            return JsonResponse({"cartItems":cartItems})
+            return JsonResponse({"cartItems":cartItems, "total_price":total_price})
             
         else:
             # messages.info(request, "This item was not in your cart")
@@ -438,7 +451,6 @@ def get_products(request):
 # For recommending products in front page
 def recommendation(current_user_id, user):
     product_rating = pd.DataFrame(list(Myrating.objects.all().values()))
-    print(product_rating)
     new_user = product_rating.user_id.unique().shape[0]
     # current_user_id = request.user.id
 

@@ -36,9 +36,9 @@
 						<div class="cart-row" id="rowid{{item.product.id}}">
 							<div style="flex:2"><img class="row-image" src="{{item.product.imageURL}}"></div>
 							<div style="flex:2"><p>{{item.product.name}}</p></div>
-							<div style="flex:1"><p>${{item.product.price|floatformat:2}}</p></div>
+							<div style="flex:1"><p id="price{{item.product.id}}">${{item.product.price|floatformat:2}}</p></div>
 							<div style="flex:1">
-								<p class="quantity" id="id{{item.product.id}}">{{item.quantity}}</p>
+								<p class="quantity" id="q{{item.product.id}}">{{item.quantity}}</p>
 								<div class="quantity">
 									<a href="{% url 'add_to_cart' %}" class="add-btn" id="{{item.product.id}}"><img class="chg-quantity" src="{% static  'images/arrow-up.png' %}"></a>
 							
@@ -46,7 +46,7 @@
 
 								</div>
 							</div>
-							<div style="flex:1"><p>${{item.get_total_item_price}}</p></div>							
+							<div style="flex:1"><p id="tprice{{item.product.id}}">${{item.get_total_item_price}}</p></div>							
 						</div>
 						{% endfor %}					
 		
@@ -61,30 +61,36 @@
 <script>
 	$( ".add-btn" ).click(function(e){
 			var id = $(this).attr('id');
-			var qid = "id"+id
-			var quantity = parseInt($("#"+qid).text())
+			var quantity = parseInt($("#q"+id).text())
+			var strprice = $("#price"+id).text()
+			var price = parseFloat(strprice.substr(1))
 			quantity = quantity +1
+			var tprice = (quantity * price).toFixed(2)
 			if (quantity <= 0) {
 				console.log("Less")
 				$("#rowid"+id).remove()	
 			}
 			else{
-				$("#"+qid).text(quantity)
+				$("#q"+id).text(quantity)
+				$("#tprice"+id).text("$"+tprice)
 				console.log("More")
 			}		
 		});
 
 		$( ".remove-btn" ).click(function(e){
 			var id = $(this).attr('id');
-			var qid = "id"+id
-			var quantity = parseInt($("#"+qid).text())
+			var quantity = parseInt($("#q"+id).text())
+			var strprice = $("#price"+id).text()
+			var price = parseFloat(strprice.substr(1))
 			quantity = quantity - 1
+			var tprice = (quantity * price).toFixed(2)
 			if (quantity <= 0) {
 				console.log("Less")
 				$("#rowid"+id).remove()	
 			}
 			else{
-				$("#"+qid).text(quantity)
+				$("#q"+id).text(quantity)
+				$("#tprice"+id).text("$"+tprice)
 				console.log("More")
 			}
 	

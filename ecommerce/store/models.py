@@ -77,6 +77,7 @@ class Order(models.Model):
     def __str__(self):
         return str(self.customer.user)
 
+    @property
     def get_total(self):
         total = 0
         for order_items in self.items.all():
