@@ -15,7 +15,7 @@
 				</div>
 				
 				{% for product in products %}
-				<div class="cart-row">
+				<div class="cart-row" id="rowid{{product.id}}">
 					<div style="flex:2"><img class="row-image" src="{{product.imageURL}}"></div>
 					<div style="flex:2"><p>{{product.name}}</p></div>
 					<div style="flex:1"><p>${{product.price|floatformat:2}}</p></div>
@@ -26,7 +26,7 @@
 						</div>
 					</div>
 					<div style="flex:2">
-						<a href= "{% url 'remove_from_wishlist' product.id %}" class="btn btn-outline-primary">Remove from Wishlist</a>
+						<a href= "{% url 'remove_from_wishlist' %}" class="btn btn-outline-primary remove-wishlist" id="{{product.id}}">Remove from Wishlist</a>
 					</div>							
 				</div>
 				{% endfor %}					
@@ -36,3 +36,29 @@
 	</section>
 
 {% endblock content %}
+
+{% block script %}
+<script>
+	$( ".remove-wishlist" ).click(function(e)
+	{
+		var id = $(this).attr('id');
+		console.log(id)
+		$.ajax({	
+			url: "{% url 'remove_from_wishlist' %}",
+			type: "POST",
+			data: {id:id, csrfmiddlewaretoken: "{{ csrf_token }}",},
+			success: function(response) {
+				console.log(response);
+				$("#rowid"+id).remove()	
+			},
+			error: function(error) {
+				console.log(error);
+			}
+		})
+		e.preventDefault();
+		
+	});
+
+	
+</script>
+{% endblock script %}

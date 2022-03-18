@@ -297,7 +297,8 @@ class SearchResultsView(ListView):
         return products
     
 @login_required(login_url="login")
-def remove_from_wishlist(request, id):
+def remove_from_wishlist(request):
+    id = request.POST.get("id")
     MyList.objects.all().filter(product_id=id, user=request.user).update(watch=False)
     return redirect(request.META["HTTP_REFERER"])
 
