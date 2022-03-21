@@ -75,7 +75,11 @@ class Order(models.Model):
     )
 
     def __str__(self):
-        return str(self.customer.user)
+        if self.ordered==True:
+            info = "Ordered: " + str(self.customer.user)
+            return str(info)
+        else:
+            return str(self.customer.user)
 
     @property
     def get_total(self):
@@ -122,8 +126,17 @@ class Myrating(models.Model):
         default=0, validators=[MaxValueValidator(5), MinValueValidator(0)]
     )
 
+    def __str__(self):
+        info = str(self.user) + " (" + str(self.product.name) + " : " + str(self.rating) + ")"
+        return info
+
 
 class MyList(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     watch = models.BooleanField(default=False)
+
+    def __str__(self):
+        if self.watch == True:
+            info = str(self.user) + " (" + str(self.product.name) + ")"
+            return info

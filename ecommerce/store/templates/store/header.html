@@ -98,6 +98,11 @@
 
     </head>
     <body>
+        {% if request.user.is_authenticated %}
+        <script>
+            var userauthenticated = true
+        </script>
+        {% endif %}
         <div id="page-container">
             <header>
                 <div class="container">
@@ -271,6 +276,7 @@
         <script>
             $( ".add-btn" ).click(function(e)
             {
+                console.log(userauthenticated)
                 var id = $(this).attr('id');
                 console.log(id)
                 $.ajax({
