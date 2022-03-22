@@ -243,6 +243,7 @@ class CheckoutView(LoginRequiredMixin, View):
                 shipping_address.save()
                 order.shipping_address = shipping_address
                 order.save()
+                self.request.session['address'] = shipping_address.id
                 return redirect("payment")
 
         except ObjectDoesNotExist:
@@ -334,6 +335,7 @@ def add_to_cart(request):
     else:
         date_orderd = timezone.now()
         order = Order.objects.create(customer=customer, date_orderd=date_orderd)
+        print(order.date_orderd)
         order.items.add(order_item)
         order_item.quantity += 1
         order_item.save()
@@ -409,10 +411,20 @@ def verify_payment(request):
     payment.amount = float(amount) / 100
     payment.save()
 
+
     # Assign payment to order
+    addressid = request.session['address']
+    address = ShippingAddress.objects.get(id=addressid)
+    order.sphipping_address = address
     order.ordered = True
     order.payment = payment
     order.save()
+
+    order_items = OrderItem.objects.filter(order__customer=customer)
+    for item in order_items:
+        item.ordered = True
+        item.save()
+       
     messages.success(request, "Payment Complete.")
 
     print("Amount: ", amount)
@@ -422,6 +434,26 @@ def verify_payment(request):
         f"Payment Done !! With IDX. {response_data['user']['idx']}", safe=False
     )
 
+
+def cash_on_delivery(request):
+    customer = get_object_or_404(Customer, user=request.user)
+    order = Order.objects.get(customer=customer, ordered=False)
+
+    addressid = request.session['address']
+    address = ShippingAddress.objects.get(id=addressid)
+    order.sphipping_address = address
+    order.ordered = True
+    order.save()
+
+    order_items = OrderItem.objects.filter(order__customer=customer)
+    for item in order_items:
+        item.ordered = True
+        item.save()
+    messages.success(request, "Your product will be home delivered")
+
+    print("Delivered")
+
+    return JsonResponse({"cod":True})
 
 @login_required(login_url="login")
 def wishlist(request):

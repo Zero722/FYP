@@ -49,23 +49,51 @@
                     >
                         Pay with Khalti
                     </button>
-                </div>                                
+                </div>   
+                <br>
+                <div class="col-12">
+                    <button
+                        id="cash-on-delivery-button"
+                        style="
+                            background-color: #5c2d91;
+                            cursor: pointer;
+                            color: #fff;
+                            border: none;
+                            padding: 5px 10px;
+                            border-radius: 5px;
+                            width: 20%;
+                        ">
+                        Cash on Delivery
+                    </button>
+                </div>
             </div>
         </div>
 
         <div id="box">
-            <span class="ion-checkmark-round"></span>
-            <h1>Payment Successful!</h1>
+            
+            <h1 id="message"></h1>
+            
             <a class="btn btn-primary" onclick="unpop()" class="close">Close</a>
         </div>
     </section>
    
     <script>
+        function successPayment() {
+            document.getElementById('message').innerHTML
+                = 'Payment Successful!';
+        }
+        function successCOD() {
+            document.getElementById('message').innerHTML
+                = 'Your product will be delivered soon!';
+        }
         function pop(){
                 document.getElementById("box").style.display="block";
         }
         function unpop(){
             document.getElementById("box").style.display="none";
+            urlhome = "{% url 'store' %}"
+            console.log(urlhome)
+            window.location.href = urlhome
         }
         $(document).ready(function() {
             console.log($.ajax);
@@ -96,6 +124,7 @@
                         dataType: 'json',
                         success: function(response) {
                             console.log(response);
+                            successPayment();
                             pop();
                         },
                         error: function(error) {
@@ -120,6 +149,27 @@
             console.log("submitted");
             // minimum transaction amount must be 10, i.e 1000 in paisa.
             checkout.show({amount: {{order.get_total}}*100 });
+        }
+
+        var btn2 = document.getElementById("cash-on-delivery-button");
+        btn2.onclick = function () {
+            console.log("Cash on delivery");
+            $.ajax({
+                    
+                url: "{% url 'cash_on_delivery' %}",
+                type: "POST",
+                data: {csrfmiddlewaretoken: "{{ csrf_token }}",},
+                success: function(response) {
+                    successCOD();
+                    pop();
+                    console.log("Your product will be home delivered")                        
+                    
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            })
+            
         }
     </script>
 

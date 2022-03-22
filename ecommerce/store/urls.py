@@ -22,6 +22,7 @@ urlpatterns = [
 
     # payment url
     path("api/verify_payment", verify_payment, name="verify_payment"),
+    path("cash_on_delivery/", views.cash_on_delivery, name="cash_on_delivery"),
     
 
 ]

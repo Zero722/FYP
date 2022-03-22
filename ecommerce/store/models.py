@@ -53,7 +53,10 @@ class OrderItem(models.Model):
         return total
 
     def __str__(self):
-        info = str(self.quantity) + " of " + str(self.product.name)
+        if self.ordered==True:
+            info = str(self.quantity) + " of " + str(self.product.name) + " (Ordered)"
+        else:
+            info = str(self.quantity) + " of " + str(self.product.name)
         return str(info)
 
 
@@ -104,7 +107,8 @@ class ShippingAddress(models.Model):
     contact = models.BigIntegerField(null=True)
 
     def __str__(self):
-        return str(self.customer.user)
+        info = str(self.customer.user) + ": " + str(self.street_address) + ", " + str(self.country) + " (Contact: " + str(self.contact) + ")"
+        return info
 
 
 class Payment(models.Model):
