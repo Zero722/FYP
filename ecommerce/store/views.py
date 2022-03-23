@@ -166,7 +166,7 @@ def details(request, product_id):
                         q = Myrating(user=request.user, product=product, rating=rate)
                         q.save()
 
-                    messages.success(request, "Rating has been submitted!")
+                    # messages.success(request, "Rating has been submitted!")
 
                 return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
             out = list(Myrating.objects.filter(user=request.user.id).values())
@@ -205,7 +205,7 @@ def cart(request):
         return render(request, "store/cart.html", context)
 
     except ObjectDoesNotExist:
-        messages.warning(request, "You do not have an active order")
+        # messages.warning(request, "You do not have an active order")
         context = {}
         return render(request, "store/cart.html", context)
 
@@ -409,7 +409,7 @@ def verify_payment(request):
         response = JsonResponse(
             {"status": "false", "message": response_data["detail"]}, status=500
         )
-        messages.error(request, "Payment cannot be Processed.")
+        # messages.error(request, "Payment cannot be Processed.")
 
         return response
 
@@ -435,7 +435,7 @@ def verify_payment(request):
         item.ordered = True
         item.save()
        
-    messages.success(request, "Payment Complete.")
+    # messages.success(request, "Payment Complete.")
 
     print("Amount: ", amount)
     print("Token: ", token)
@@ -460,7 +460,7 @@ def cash_on_delivery(request):
     for item in order_items:
         item.ordered = True
         item.save()
-    messages.success(request, "Your product will be home delivered")
+    # messages.success(request, "Your product will be home delivered")
 
     print("Delivered")
 
