@@ -259,36 +259,23 @@ section.product-list .row {
 }
 
 #box {
-  width: 500px;
+  max-width: 500px;
+  width: 90%;
   overflow: hidden;
-  background: #f1f1f1;
-  box-shadow: 0 0 20px black;
+  background: #fff;
+  box-shadow: 0 0 20px #d5d5d5;
   border-radius: 8px;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 9999;
-  padding: 10px;
+  z-index: 10;
+  padding: 30px;
   text-align: center;
   display: none;
 }
-
-#box span {
-  color: #0e8ce4;
-  font-size: 40px;
-  display: block;
-  margin: 20px 0;
-}
-
-.close {
-  font-size: 18px;
+#box a.btn {
   color: white;
-  padding: 10px 30px;
-  cursor: pointer;
-  background: #0e8ce4;
-  display: inline-block;
-  border-radius: 4px;
 }
 
 .login-register .form-wrap {
