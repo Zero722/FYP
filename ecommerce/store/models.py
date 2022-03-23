@@ -67,8 +67,7 @@ class Order(models.Model):
     items = models.ManyToManyField(OrderItem)
     date_orderd = models.DateTimeField(auto_now_add=True)
     ordered = models.BooleanField(default=False, null=False, blank=False)
-    being_delivered = models.BooleanField(default=False)
-    transaction_id = models.CharField(max_length=200, null=True)
+    delivered = models.BooleanField(default=False)
     total_price = models.FloatField(max_length=200, null=True)  # added
     sphipping_address = models.ForeignKey(
         "ShippingAddress", on_delete=models.SET_NULL, blank=True, null=True
@@ -77,7 +76,7 @@ class Order(models.Model):
         "Payment", on_delete=models.SET_NULL, blank=True, null=True
     )
 
-    def __str__(self):
+    def __str__(self):      
         if self.ordered==True:
             info = "Ordered: " + str(self.customer.user)
             return str(info)
@@ -120,7 +119,8 @@ class Payment(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return str(self.customer.user)
+        info = str(self.customer.user) + ": " + str(self.khalti_id) 
+        return info
 
 
 class Myrating(models.Model):

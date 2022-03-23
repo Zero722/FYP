@@ -321,6 +321,9 @@ def add_to_cart(request):
             order_item.save()
             cartItems = order.get_cart_items
             total_price = order.get_total
+            order.total_price = order.get_total
+            order.save()
+
             # messages.info(request, "This item quantity was updated.")
             return JsonResponse({"cartItems":cartItems, "total_price":total_price})
             
@@ -330,6 +333,8 @@ def add_to_cart(request):
             order_item.save()
             cartItems = order.get_cart_items
             total_price = order.get_total
+            order.total_price = order.get_total
+            order.save()
             # messages.info(request, "This item was added to your cart.")
             return JsonResponse({"cartItems":cartItems, "total_price":total_price})
     else:
@@ -341,6 +346,8 @@ def add_to_cart(request):
         order_item.save()
         cartItems = order.get_cart_items
         total_price = order.get_total
+        order.total_price = order.get_total
+        order.save()
         # messages.info(request, "This item was added to your cart.")
         return JsonResponse({"cartItems":cartItems, "total_price":total_price})
 
@@ -366,6 +373,8 @@ def remove_from_cart(request):
             # messages.info(request, "This item quantity was updated.")
             cartItems = order.get_cart_items
             total_price = order.get_total
+            order.total_price = order.get_total
+            order.save()
             return JsonResponse({"cartItems":cartItems, "total_price":total_price})
             
         else:
@@ -418,6 +427,7 @@ def verify_payment(request):
     order.sphipping_address = address
     order.ordered = True
     order.payment = payment
+    order.total_price = order.get_total
     order.save()
 
     order_items = OrderItem.objects.filter(order__customer=customer)
@@ -443,6 +453,7 @@ def cash_on_delivery(request):
     address = ShippingAddress.objects.get(id=addressid)
     order.sphipping_address = address
     order.ordered = True
+    order.total_price = order.get_total
     order.save()
 
     order_items = OrderItem.objects.filter(order__customer=customer)
