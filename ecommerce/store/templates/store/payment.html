@@ -29,49 +29,28 @@
                 {% include "store/order_snippet.html" %}
     
                 <div class="col-12">
-                    {% comment %}
-                    <form method="POST" class="card-body">
-                        {% csrf_token %} {{form|crispy}}
-                        <br />
-                    </form>
-                    {% endcomment %}
-                    <button
-                        id="payment-button"
-                        style="
-                            background-color: #5c2d91;
-                            cursor: pointer;
-                            color: #fff;
-                            border: none;
-                            padding: 5px 10px;
-                            border-radius: 5px;
-                            width: 20%;
-                        "
-                    >
-                        Pay with Khalti
-                    </button>
+                    <div class="d-flex mt-4">
+                        <button
+                            id="payment-button"
+                            class="btn"
+                            style="background-color: #5c2d91; color: #fff;"
+                        >
+                            Pay with Khalti
+                        </button>
+                        <button
+                            id="cash-on-delivery-button"
+                            class="btn btn-primary ml-3"
+                        >
+                            Cash on Delivery
+                        </button>
+                    </div>
                 </div>   
-                <br>
-                <div class="col-12">
-                    <button
-                        id="cash-on-delivery-button"
-                        style="
-                            background-color: #5c2d91;
-                            cursor: pointer;
-                            color: #fff;
-                            border: none;
-                            padding: 5px 10px;
-                            border-radius: 5px;
-                            width: 20%;
-                        ">
-                        Cash on Delivery
-                    </button>
-                </div>
             </div>
         </div>
 
         <div id="box">
             
-            <h1 id="message"></h1>
+            <h2 id="message" class="h4 mb-3"></h2>
             
             <a class="btn btn-primary" onclick="unpop()" class="close">Close</a>
         </div>
