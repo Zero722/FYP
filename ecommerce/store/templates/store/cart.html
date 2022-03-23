@@ -35,7 +35,7 @@
 						{% for item in object.items.all %}
 						<div class="cart-row" id="rowid{{item.product.id}}">
 							<div style="flex:2"><img class="row-image" src="{{item.product.imageURL}}"></div>
-							<div style="flex:2"><p>{{item.product.name}}</p></div>
+							<div style="flex:2"><p><a href="{% url 'details' item.product.id %}">{{item.product.name}}</a></p></div>
 							<div style="flex:1"><p id="price{{item.product.id}}">${{item.product.price|floatformat:2}}</p></div>
 							<div style="flex:1">
 								<p class="quantity" id="q{{item.product.id}}">{{item.quantity}}</p>
