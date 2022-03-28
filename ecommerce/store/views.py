@@ -22,23 +22,21 @@ from django.core.paginator import Paginator
 
 from .models import *
 
-# Create your views here.
-
-
 def custom_login(request):
     if request.user.is_authenticated:
         return redirect("store")
     else:
         return loginUser(request)
 
+def custom_register(request):
+    if request.user.is_authenticated:
+        return redirect("store")
+    else:
+        return registerUser(request)
 
 def loginUser(request):
     if "next" in request.GET:
-        messages.add_message(
-            request,
-            messages.INFO,
-            "Please log in, in order to perform the requested action.",
-        )
+        messages.add_message(request,messages.INFO,"Please log in, in order to perform the requested action.",)
     page = "login"
     if request.method == "POST":
         username = request.POST["username"]
@@ -53,11 +51,9 @@ def loginUser(request):
 
     return render(request, "store/login_register.html", {"page": page})
 
-
 def logoutUser(request):
     logout(request)
     return redirect("login")
-
 
 def registerUser(request):
     page = "register"
@@ -84,13 +80,10 @@ def registerUser(request):
                 return redirect("store")
 
         else:
-            messages.add_message(
-                request, messages.INFO, "Cannot register. Please fill valid information"
-            )
+            messages.add_message(request, messages.INFO, "Cannot register. Please fill valid information")
 
     context = {"form": form, "page": page, "customer_form": customer_form}
     return render(request, "store/login_register.html", context)
-
 
 def store(request):
 
@@ -115,9 +108,7 @@ def store(request):
     context = {"all_products": all_products}
     return render(request, "store/store.html", context)
 
-
-def details(request, product_id):
-    
+def details(request, product_id):  
     try:
         product = Product.objects.get(pk=product_id)
         if product.status == True:
@@ -165,7 +156,6 @@ def details(request, product_id):
                     else:
                         q = Myrating(user=request.user, product=product, rating=rate)
                         q.save()
-
                     # messages.success(request, "Rating has been submitted!")
 
                 return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
@@ -195,7 +185,6 @@ def details(request, product_id):
     context = {"product": product, "available": available,}
     return render(request, "store/details.html", context)
 
-
 @login_required(login_url="login")
 def cart(request):
     try:
@@ -209,10 +198,8 @@ def cart(request):
         context = {}
         return render(request, "store/cart.html", context)
 
-
 class CheckoutView(LoginRequiredMixin, View):
     login_url = "login"
-
     def get(self, *args, **kwargs):
         try:
             customer = get_object_or_404(Customer, user=self.request.user)
@@ -249,10 +236,8 @@ class CheckoutView(LoginRequiredMixin, View):
         except ObjectDoesNotExist:
             return redirect("/")
 
-
 class PaymentView(LoginRequiredMixin, View):
     login_url = "login"
-
     def get(self, *args, **kwargs):
         try:
             customer = get_object_or_404(Customer, user=self.request.user)
@@ -263,12 +248,10 @@ class PaymentView(LoginRequiredMixin, View):
         except ObjectDoesNotExist:
             return redirect("payment")
 
-
 class SearchResultsView(ListView):
     model = Product
     template_name = "store/search-product.html"
     context_object_name = "products"
-
 
     def get_queryset(self):
         query = self.request.GET.get("search")
@@ -294,7 +277,6 @@ class SearchResultsView(ListView):
             paginator = Paginator(product_contain, 8) # Show 8 products per page.
             all_products = paginator.get_page(page_number)
             products = {"search_results": all_products, "query": query, "sortby":"h2l"}
-
         return products
     
 @login_required(login_url="login")
@@ -323,7 +305,6 @@ def add_to_cart(request):
             total_price = order.get_total
             order.total_price = order.get_total
             order.save()
-
             # messages.info(request, "This item quantity was updated.")
             return JsonResponse({"cartItems":cartItems, "total_price":total_price})
             
@@ -351,7 +332,6 @@ def add_to_cart(request):
         # messages.info(request, "This item was added to your cart.")
         return JsonResponse({"cartItems":cartItems, "total_price":total_price})
 
-
 @login_required(login_url="login")
 def remove_from_cart(request):
     id = request.POST.get("id")
@@ -363,7 +343,6 @@ def remove_from_cart(request):
         # check if the order item is in the order
         if order.items.filter(product__id=product.id).exists():
             order_item = OrderItem.objects.filter(product=product, customer=customer, ordered=False)[0]
-
             order_item.quantity -= 1
             order_item.save()
 
@@ -384,12 +363,10 @@ def remove_from_cart(request):
         # messages.info(request, "You do not have an active order")
         return redirect(request.META["HTTP_REFERER"])
 
-
 @csrf_exempt
 def verify_payment(request):
     customer = get_object_or_404(Customer, user=request.user)
     order = Order.objects.get(customer=customer, ordered=False)
-
     data = request.POST
     token = data["token"]
     amount = data["amount"]
@@ -399,9 +376,7 @@ def verify_payment(request):
     url = "https://khalti.com/api/v2/payment/verify/"
     payload = {"token": token, "amount": amount}
     headers = {"Authorization": "Key test_secret_key_319ae9296dd644e396434975266e231d"}
-
     response = requests.post(url, payload, headers=headers)
-
     response_data = json.loads(response.text)
     status_code = str(response.status_code)
 
@@ -410,7 +385,6 @@ def verify_payment(request):
             {"status": "false", "message": response_data["detail"]}, status=500
         )
         # messages.error(request, "Payment cannot be Processed.")
-
         return response
 
     # Creating Payment
@@ -419,7 +393,6 @@ def verify_payment(request):
     payment.customer = customer
     payment.amount = float(amount) / 100
     payment.save()
-
 
     # Assign payment to order
     addressid = request.session['address']
@@ -433,17 +406,11 @@ def verify_payment(request):
     order_items = OrderItem.objects.filter(order__customer=customer)
     for item in order_items:
         item.ordered = True
-        item.save()
-       
+        item.save()       
     # messages.success(request, "Payment Complete.")
-
-    print("Amount: ", amount)
-    print("Token: ", token)
-
     return JsonResponse(
         f"Payment Done !! With IDX. {response_data['user']['idx']}", safe=False
     )
-
 
 def cash_on_delivery(request):
     customer = get_object_or_404(Customer, user=request.user)
@@ -471,14 +438,11 @@ def wishlist(request):
     products = Product.objects.filter(mylist__watch=True, mylist__user=request.user)
     return render(request, "store/wishlist.html", {"products": products})
 
-
 # Search
 def get_products(request):
     search = request.GET.get("search")
     payload = []
     if search:
-        # objs = Product.objects.filter(Q(name__icontains = search)|Q(name__startswith = search))
-        # objs = Product.objects.filter(name__icontains = search)
         objs = Product.objects.filter(name__startswith=search)
         ob = Product.objects.filter(name__icontains=search)
 
@@ -491,12 +455,10 @@ def get_products(request):
 
     return JsonResponse({"status": True, "payload": payload})
 
-
 # For recommending products in front page
 def recommendation(current_user_id, user):
     product_rating = pd.DataFrame(list(Myrating.objects.all().values()))
     new_user = product_rating.user_id.unique().shape[0]
-    # current_user_id = request.user.id
 
     # if new user not rated any product
     if current_user_id > new_user:
@@ -534,9 +496,7 @@ def recommendation(current_user_id, user):
         ]
     )
 
-
     return product_list
-
 
 # To get similar products based on user rating
 def get_similar(product_name, rating, corrMatrix):
