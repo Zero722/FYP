@@ -1,5 +1,5 @@
 # FYP
-Final year project BSc. CSIT (ecommerce app)
+Final year project BSc. CSIT (ecommerce app) made using Python/Django
 
 superuser details:
 admin
